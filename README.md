@@ -125,6 +125,7 @@ Returns an empty list if that trip id doesn't exist in the database.
 payload = {
   name: "Thailand Fun Adventure",
   publish: true,
+  photo_url: "http://www.photos.com/thai.jpg",
   user_id: 2
 }
 ```
@@ -274,6 +275,9 @@ package = [
   start_time:"2017-12-12 20:01:01",
   end_time:"2017-12-13 20:01:01",
   day_number:1,
+  description:"some fun sleeping",
+  photo_url:"http://exmaple.come/hotel.jpg",
+  url:"http://www.yelp.com/hanoverinn",
   trip_id:1,
   travel_duration:900,
   travel_type:"bike"
@@ -289,6 +293,9 @@ package = [
   start_time:"2017-12-12 20:01:01",
   end_time:"2017-12-13 20:01:01",
   day_number:1,
+  description:"some fun thing",
+  photo_url:"http://exmaple.come/dog.jpg",
+  url:"http://www.yelp.com/pinehanover",
   trip_id:1,
   travel_duration:900,
   travel_type:"walking"
