@@ -20,6 +20,7 @@ defmodule PlanIt.Card do
     field :description, :string
     field :photo_url, :string
     field :url, :string
+    field :place_id, :string
 
     field :travel_type, :string
     field :travel_duration, :integer
@@ -28,11 +29,10 @@ defmodule PlanIt.Card do
   end
 
   def changeset(card, params) do
-    #validate format of lat and long
     card
-    |> cast(params, [:type, :name, :city, :country, :address, :lat, :long, :start_time, :end_time, :day_number, :description, :photo_url, :url, :travel_type, :travel_duration])
+    |> cast(params, [:type, :name, :city, :country, :address, :lat, :long, :start_time, :end_time, :day_number, :description, :photo_url, :url, :place_id, :travel_type, :travel_duration])
     |> cast(params, [:trip_id])
-    |> validate_required([:name, :country, :day_number])
+    |> validate_required([:name])
   end
 
 end

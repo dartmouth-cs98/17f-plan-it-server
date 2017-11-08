@@ -136,7 +136,6 @@ defmodule PlanIt.CardController do
   end
 
 
-
   # PUT - update an existing card
   def update(conn, %{"id" => card_id} = params) do
     card = Repo.get(Card, card_id)

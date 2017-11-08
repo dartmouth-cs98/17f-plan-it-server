@@ -86,7 +86,9 @@ defmodule PlanIt.UserController do
       name: "Hanover Vacation",
       publish: true,
       photo_url: "https://www.dartmouth.edu/~library/bakerberry/images/bb5.jpg",
-      user_id: 1
+      user_id: 1,
+      start_time: DateTime.from_naive!(~N[2018-05-24 00:00:00], "Etc/UTC"),
+      end_time: DateTime.from_naive!(~N[2018-05-26 00:00:00], "Etc/UTC"),
     })
     Repo.insert!(%Trip{
       name: "Turlock Trip",
@@ -103,19 +105,19 @@ defmodule PlanIt.UserController do
 
     Repo.insert!(%Card{
       type: "restaurant",
-      name: "Pine",
+      name: "Lou's",
       city: "Hanover",
       country: "USA",
-      address: "Corner of the Green",
-      lat: 43.7021,
-      long: -72.2890,
-      start_time: DateTime.from_naive!(~N[2016-05-24 13:26:08.003], "Etc/UTC"),
-      end_time: DateTime.from_naive!(~N[2016-05-24 13:26:08.003], "Etc/UTC"),
+      address: "Main street",
+      lat: 43.7015182,
+      long: -72.2914068,
+      start_time: DateTime.from_naive!(~N[2018-05-24 13:26:08.003], "Etc/UTC"),
+      end_time: DateTime.from_naive!(~N[2018-05-24 14:26:08.003], "Etc/UTC"),
       day_number: 1,
       trip_id: 1,
-      description: "Finest restaurant",
+      description: "Breakfast restaurant",
       photo_url: "http://www.billrooneystudio.com/brimages/pine_wed_1a_001.jpg",
-      url: "https://www.yelp.com/biz/pine-restaurant-hanover-2",
+      url: "https://www.yelp.com/biz/pine-restaurant-hanover-2"
     })
 
     Repo.insert!(%Card{
@@ -124,13 +126,31 @@ defmodule PlanIt.UserController do
       city: "Hanover",
       country: "USA",
       address: "In front of East Wheelock",
-      lat: 43.7021,
-      long: -72.2890,
-      start_time: DateTime.from_naive!(~N[2016-05-24 13:26:08.003], "Etc/UTC"),
-      end_time: DateTime.from_naive!(~N[2016-05-24 13:26:08.003], "Etc/UTC"),
+      lat: 43.7028954,
+      long: -72.2861988,
+      start_time: DateTime.from_naive!(~N[2018-05-24 15:26:08.003], "Etc/UTC"),
+      end_time: DateTime.from_naive!(~N[2018-05-24 16:26:08.003], "Etc/UTC"),
       day_number: 1,
       trip_id: 1,
       description: "Largest gym in Hanover",
+      photo_url: "http://image.cdnllnwnl.xosnetwork.com/pics33/640/MY/MYUWEHDGHFRUPUW.20151015131030.jpg",
+      travel_type: "bike",
+      travel_duration: 900
+    })
+
+    Repo.insert!(%Card{
+      type: "restaurant",
+      name: "Pine",
+      city: "Hanover",
+      country: "USA",
+      address: "By Main Street",
+      lat: 43.7022265,
+      long: -72.2913434,
+      start_time: DateTime.from_naive!(~N[2018-05-25 12:26:08.003], "Etc/UTC"),
+      end_time: DateTime.from_naive!(~N[2018-05-25 13:26:08.003], "Etc/UTC"),
+      day_number: 2,
+      trip_id: 1,
+      description: "Nice restaurant",
       photo_url: "http://image.cdnllnwnl.xosnetwork.com/pics33/640/MY/MYUWEHDGHFRUPUW.20151015131030.jpg",
       travel_type: "bike",
       travel_duration: 900

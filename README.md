@@ -125,8 +125,10 @@ Returns an empty list if that trip id doesn't exist in the database.
 payload = {
   name: "Thailand Fun Adventure",
   publish: true,
-  photo_url: "http://www.photos.com/thai.jpg",
-  user_id: 2
+  photo_url: "http://exampleurl.com/akagjagj.JPG"
+  user_id: 2,
+  start_time: "2017-12-12 00:00:00",
+  end_time: "2017-12-24 00:00:00"
 }
 ```
 
@@ -234,7 +236,10 @@ package = [
   day_number:1,
   trip_id:1,
   travel_duration:900,
-  travel_type:"bike"
+  travel_type:"bike",
+  description: "Hotel",
+  photo_url: "http://examplephotourl.com/picture.jpg",
+  url: "https://www.yelp.com/biz/pine-restaurant-hanover-2"
   },
 { type:"hotel",
   name:"Hanover Inn",
@@ -258,7 +263,7 @@ Returns 400 and "BAD" if the create is not successful. Nothing will be inserted 
 
 #### Update multiple cards (POST)
 
-Takes in a list of cards to update and/or insert into the database. Only one new card can be inserted into the database, and it must have an id of 0. Must provide a **list** of cards, even if you are only trying to insert/udate one card.
+Takes in a list of cards to update and/or insert into the database. Only one new card can be inserted into the database, and it must have an id of 0. Must provide a **list** of cards, even if you are only trying to insert/update one card.
 
 ```
 /api/v1/cards?trip_id=:id
@@ -275,12 +280,11 @@ package = [
   start_time:"2017-12-12 20:01:01",
   end_time:"2017-12-13 20:01:01",
   day_number:1,
-  description:"some fun sleeping",
-  photo_url:"http://exmaple.come/hotel.jpg",
-  url:"http://www.yelp.com/hanoverinn",
   trip_id:1,
   travel_duration:900,
-  travel_type:"bike"
+  travel_type:"bike",
+  description:"Best hotel in Hanover",
+  photo_url:""
   },
 { id: 0
   type:"restaurant",
@@ -293,9 +297,6 @@ package = [
   start_time:"2017-12-12 20:01:01",
   end_time:"2017-12-13 20:01:01",
   day_number:1,
-  description:"some fun thing",
-  photo_url:"http://exmaple.come/dog.jpg",
-  url:"http://www.yelp.com/pinehanover",
   trip_id:1,
   travel_duration:900,
   travel_type:"walking"
@@ -305,7 +306,7 @@ package = [
 
 
 Returns a list of card objects if create is successful. You'll have to get the new id from this list.
-Returns "BAD" if the card is not successful.
+Returns "BAD" if the update/insert is not successful.
 
 #### Update a single card (PUT)
 ```
@@ -330,6 +331,25 @@ Returns 400 and an error message if not successful.
 Returns "ok" if delete is successful. 
 Returns 400 and an error message if the delete is not successful.
 
+## Yelp 
+
+#### Get businesses near a location (GET)
+```
+/api/v1/yelp?latitude=:lat&longitude=:long
+```
+
+Returns 20 businesses if get is successful.
+Returns an error message if no businesses were found near the provided coordinates. Make sure that South latitudes and west longitudes are negative.
+
+#### Get certain categories of businesses near a location (GET)
+```
+/api/v1/yelp?latitude=:lat&longitude=:long&categories=:categories
+```
+
+The categories should be a string of categories, separated by commas, with no spaces in the string. For example, "bars,french" will filter by Bars and French (i.e. will return bars AND French restaurants). For a list of supported categories, see https://www.yelp.com/developers/documentation/v2/all\_category\_list.
+
+Returns 20 businesses if get is successful.
+Returns an error message if no businesses in those categories were found near the provided coordinates. 
 
 # TESTING
 
@@ -360,3 +380,9 @@ curl -X PUT -d '[
 
 ### Update a card
 curl -X PUT -d '{"lat":1123.123}' -H "Content-Type: application/json" http://localhost:4000/api/v1/cards/1
+
+### Get businesses near Hanover
+curl -X GET http://localhost:4000/api/v1/yelp?latitude=43.7022&longitude=-72.2896
+
+### Get chocolate- and donut-related businesses near Hanover
+curl -X GET http://localhost:4000/api/v1/yelp?latitude=43.7022&longitude=-72.2896&categories=chocolate,donuts
