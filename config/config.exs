@@ -6,13 +6,13 @@ config :plan_it,
 
 # Configure your database
 config :plan_it, PlanIt.Repo,
-#  adapter: Ecto.Adapters.Postgres,
-#  username: "postgres",
-#  password: "postgres",
-#  database: "postgresql-pointy-80927",
+  adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
+#  username: "postgres",
+#  password: "postgres",
+#  database: "postgresql-pointy-80927",
 
 # Configures the endpoint
 config :plan_it, PlanIt.Endpoint,
