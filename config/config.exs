@@ -35,7 +35,6 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-import_config "#{Mix.env}.exs"
 
 
 config :plan_it, PlanIt.Endpoint,
@@ -73,3 +72,5 @@ config :phoenix, :stacktrace_depth, 20
 # put OAuth2 debug mode
 config :oauth2,
   debug: true
+
+import_config "#{Mix.env}.exs"
