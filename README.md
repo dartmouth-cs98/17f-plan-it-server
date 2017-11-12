@@ -1,46 +1,28 @@
 # Planit Server
 
-# Running the server
+# Installation
 
-### Install elixir
-```
-brew install elixir
-```
+Install Heroku CLI at https://devcenter.heroku.com/articles/heroku-cli. 
 
-### Install hex
-```
-mix local.hex
-```
+Install PostgreSQL at https://www.postgresql.org/download/. 
 
-### Install phoenix
+# Database
+
+Enter the database:
+
 ```
-mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez
+heroku pg:psql
 ```
 
-### Install Dependencies
-```
-mix deps.get
-```
+List tables:
 
-### Make sure that mysql.server is running
 ```
-mysql.server start
-```
-
-Note: if you set a password for your mysql server, then you must configure your database to by setting the "password" field in config/dev.exs.
-
-### Setup database and dependencies
-```
-make drop
-make setup
-```
-
-### Run server
-```
-make start
+\dt
 ```
 
 # Endpoints V1
+
+The base URL is https://plan-it-server.herokuapp.com/.
 
 General information:
 
