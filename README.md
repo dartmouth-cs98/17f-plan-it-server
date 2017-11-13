@@ -8,17 +8,27 @@ Install PostgreSQL at https://www.postgresql.org/download/.
 
 # Database
 
-Enter the database:
+
+Enter the database: 
 
 ```
 heroku pg:psql
 ```
 
-List tables:
+Show tables: 
 
 ```
 \dt
 ```
+
+Query: 
+
+```
+select * from "user";
+```
+
+Note: make sure you put the quotations around "user" in your queries when referring to users that are created by PlanIt. Otherwise, it will display the PostgreSQL database users. 
+
 
 # Endpoints V1
 
