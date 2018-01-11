@@ -5,7 +5,6 @@ defmodule PlanIt.TripController do
   import Ecto.Query
 
   use PlanIt.Web, :controller
-
   # GET - get all trips created by a user
   def index(conn, %{"user_id" => user_id } = params) do
     if user_id == nil do
@@ -44,7 +43,6 @@ defmodule PlanIt.TripController do
 
   # POST - insert a new trip
   def create(conn, params) do
-    IO.inspect(params)
 
     {message, changeset} = Trip.changeset(%Trip{}, params)
     |> Repo.insert
@@ -78,6 +76,36 @@ defmodule PlanIt.TripController do
     case Repo.delete trip do
       {:ok, struct} -> json conn, "ok"
       {:error, message} -> json put_status(conn, 400), "failed to delete"
+    end
+  end
+
+  def upvote(conn, %{"trip_id" => trip_id}) do
+    trip = Repo.get(Trip, trip_id)
+    foo = %{upvotes: trip.upvotes + 1}
+    changeset = Trip.changeset(trip, foo)
+
+    {message, changeset} = Repo.update(changeset)
+
+    if message == :ok do
+      json conn, "ok"
+    else
+      error = "error: #{inspect changeset.errors}"
+      json put_status(conn, 400), error
+    end
+  end
+
+  def downvote(conn, %{"trip_id" => trip_id}) do
+    trip = Repo.get(Trip, trip_id)
+    foo = %{downvotes: trip.downvotes + 1}
+    changeset = Trip.changeset(trip, foo)
+
+    {message, changeset} = Repo.update(changeset)
+
+    if message == :ok do
+      json conn, "ok"
+    else
+      error = "error: #{inspect changeset.errors}"
+      json put_status(conn, 400), error
     end
   end
 end

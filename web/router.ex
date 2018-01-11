@@ -25,7 +25,12 @@ defmodule PlanIt.Router do
     resources "/users", UserController, only: [:index, :show, :create, :update]
     get "/createsample", UserController, :create_sample
 
-    resources "/trips", TripController, only: [:index, :show, :create, :update, :delete]
+    resources "/trips", TripController, only: [:index, :show, :create, :update, :delete] do
+      get "/upvote", TripController, :upvote
+      get "/downvote", TripController, :downvote
+    end
+
+
 
     resources "/cards", CardController, only: [:index, :create, :update, :delete]
 

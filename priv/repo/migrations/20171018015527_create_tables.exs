@@ -20,6 +20,8 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       add :name, :string
       add :publish, :boolean
       add :photo_url, :string
+      add :upvotes, :integer, default: 0
+      add :downvotes, :integer, default: 0
       add :start_time, :utc_datetime
       add :end_time, :utc_datetime
 
