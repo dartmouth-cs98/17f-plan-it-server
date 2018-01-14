@@ -158,6 +158,19 @@ Deleting a trip deletes any cards associated with the trip. The trip is also rem
 Returns "ok" if delete is successful. 
 Returns 400 and an error message if the delete is not successful.
 
+#### Upvote/downvote a trip (GET)
+ 
+Upvote and downvote a trip.
+Increments or decrements the number of upvotes or downvotes by 1
+
+```
+/api/v1/trips/:trip_id/upvote
+
+/api/v1/trips/:trip_id/downvote
+```
+Returns "ok" if upvote/downvote is successful. 
+Returns 400 and an error message if the upvote/downvote is not successful.
+
 ## Favorited trips
 #### Get all trips favorited by a user (GET)
 ```
