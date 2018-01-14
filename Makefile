@@ -15,3 +15,6 @@ migrate:
 
 start:
 	mix phx.server
+
+routes:
+	mix phx.routes
