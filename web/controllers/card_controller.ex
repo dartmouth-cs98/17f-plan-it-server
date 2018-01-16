@@ -47,7 +47,6 @@ defmodule PlanIt.CardController do
   ## the new card will have an ID of 0
   def create(conn, %{"trip_id" => trip_id, "_json" => cards} = params) do
     new_card = Enum.find(cards, fn(c) -> Map.get(c, "id") == 0 end)
-    IO.inspect(new_card)
     {status, new_card_changeset} = Repo.insert(Card.changeset(%Card{}, new_card))
 
     if status == :error do
@@ -136,9 +135,41 @@ defmodule PlanIt.CardController do
   end
 
 
+  #Desired lock function
+  def lock(conn, %{"card_id" => card_id, "locked" => lock_status} = params) do
+    card = Repo.get(Card, card_id)
+    lockset = Card.lockset(card, params)
+
+    {message, changeset} = Repo.update(lockset)
+
+    if message == :error do
+      error = "error: #{inspect changeset.errors}"
+      json put_status(conn, 400), error
+    end
+
+    if lock_status do
+      ret = "locked #{card_id}"
+    else
+      ret = "unlocked #{card_id}"
+    end
+
+    json conn, ret
+  end
+
+  #Not status provided to the lock
+  def lock(conn, _params) do
+    json put_status(conn, 400), "Please specify lock or unlock with locked=true or locked=false"
+  end
+
   # PUT - update an existing card
+  # You can only update the card if its not locked
   def update(conn, %{"id" => card_id} = params) do
     card = Repo.get(Card, card_id)
+
+    if card.locked == true do
+      json put_status(conn, 400), "Card is locked"
+    end
+
     changeset = Card.changeset(card, params)
 
     {message, changeset} = Repo.update(changeset)
@@ -151,6 +182,7 @@ defmodule PlanIt.CardController do
     json conn, "ok"
   end
 
+
   # DELETE - delete a card
   def delete(conn, %{"id" => card_id} = params) do
     card = Repo.get!(Card, card_id)
@@ -159,4 +191,5 @@ defmodule PlanIt.CardController do
       {:error, changeset} -> json put_status(conn, 400), "failed to delete"
     end
   end
+
 end

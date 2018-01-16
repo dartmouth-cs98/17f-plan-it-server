@@ -52,6 +52,8 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
 
       add :trip_id, references(:trip, on_delete: :delete_all)
 
+      add :locked, :boolean, default: false
+
       timestamps()
     end
 

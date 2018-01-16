@@ -25,6 +25,8 @@ defmodule PlanIt.Card do
     field :travel_type, :string
     field :travel_duration, :integer
 
+    field :locked, :boolean
+
     timestamps()
   end
 
@@ -33,6 +35,11 @@ defmodule PlanIt.Card do
     |> cast(params, [:type, :name, :city, :country, :address, :lat, :long, :start_time, :end_time, :day_number, :description, :photo_url, :url, :place_id, :travel_type, :travel_duration])
     |> cast(params, [:trip_id])
     |> validate_required([:name])
+  end
+
+  def lockset(card, params) do
+    card
+    |> cast(params, [:locked])
   end
 
 end
