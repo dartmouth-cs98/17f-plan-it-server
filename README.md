@@ -344,6 +344,15 @@ Returns 400 and an error message if not successful.
 Returns "ok" if delete is successful. 
 Returns 400 and an error message if the delete is not successful.
 
+#### (Un)lock a card (GET)
+```
+/api/v1/cards/:card_id/lock?locked=true
+/api/v1/cards/:card_id/lock?locked=false
+```
+Returns 200 "locked :card\_id" if card lock is successful
+Returns 200 "unlocked :card\_id" if card is unlocked successfully
+Returns 400 and an error message if the lock/unlock is unsuccesful 
+
 ## Yelp 
 
 #### Get businesses near a location (GET)
@@ -393,6 +402,12 @@ curl -X PUT -d '[
 
 ### Update a card
 curl -X PUT -d '{"lat":1123.123}' -H "Content-Type: application/json" http://localhost:4000/api/v1/cards/1
+
+### Lock a card
+curl http://localhost:4000/api/v1/cards/1/lock?locked=true
+
+### Unlock a card
+curl http://localhost:4000/api/v1/cards/1/lock?locked=true
 
 ### Get businesses near Hanover
 curl -X GET http://localhost:4000/api/v1/yelp?latitude=43.7022&longitude=-72.2896
