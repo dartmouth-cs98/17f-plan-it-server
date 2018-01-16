@@ -54,7 +54,9 @@ defmodule PlanIt.CardController do
       json put_status(conn, 400), error
     end
 
-    existing_cards = Enum.filter(cards, fn(c) -> Map.get(c, "id") != 0 end)
+    existing_cards = Enum.filter(cards, fn(c) ->
+      Map.get(c, "id") != 0 and not Map.get(c, "locked")
+    end)
 
     repo_messages = Enum.map(existing_cards, fn(c) ->
       Repo.get(Card, Map.get(c, "id"))
@@ -83,34 +85,6 @@ defmodule PlanIt.CardController do
 
   # POST - insert new cards
   def create(conn, %{"_json" => cards } = params) do
-    #    ecto_cards = Enum.map(cards, fn(c) ->
-    #      %{
-    #      type: Map.get(c, "type"),
-    #      name: Map.get(c, "name"),
-    #      city: Map.get(c, "city"),
-    #      country: Map.get(c, "country"),
-    #      address: Map.get(c, "address"),
-    #      lat: Map.get(c, "lat"),
-    #      long: Map.get(c, "long"),
-    #      start_time: Map.get(c, "start_time") |> Ecto.DateTime.cast!,
-    #      end_time: Map.get(c, "end_time") |> Ecto.DateTime.cast!,
-    #      day_number: Map.get(c, "day_number"),
-    #      trip_id: Map.get(c, "trip_id"),
-    #
-    #      travel_type: Map.get(c, "travel_type"),
-    #      travel_duration: Map.get(c, "travel_duration")|> Ecto.Time.cast!,
-    #
-    #      inserted_at: Ecto.DateTime.utc,
-    #      updated_at: Ecto.DateTime.utc
-    #      }
-    #    end)
-
-    #try do
-    #   Repo.insert_all(Card, ecto_cards)
-    #catch
-    #  _, _ -> json put_status(conn, 400), "BAD"
-    #end
-
     return_items = Enum.map(cards, fn(c) ->
       {status, changeset} = Card.changeset(%Card{}, c) |> Repo.insert()
     end)
@@ -156,7 +130,7 @@ defmodule PlanIt.CardController do
     json conn, ret
   end
 
-  #Not status provided to the lock
+  #No status provided to the lock
   def lock(conn, _params) do
     json put_status(conn, 400), "Please specify lock or unlock with locked=true or locked=false"
   end
