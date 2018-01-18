@@ -43,10 +43,9 @@ defmodule PlanIt.FoursquareController do
     end
   end
 
-  def topplaces(conn, %{"ll" => latlong} = params) do
+  def topplaces(conn, %{"latitude" => lat, "longitude" => long, "query" => query} = params) do
 
-    IO.inspect("calling the right function?")
-    request_url = "https://api.foursquare.com/v2/venues/explore?ll=#{latlong}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
+    request_url = "https://api.foursquare.com/v2/venues/explore?ll=#{lat},#{long}&query=#{query}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
 
     headers = []
 
@@ -54,7 +53,27 @@ defmodule PlanIt.FoursquareController do
 
     body = Poison.decode!(response.body)
 
-    IO.inspect(body)
+    businesses = Map.get(body, "venue")
+
+    if businesses == [] do
+      json conn, "No places found near those coordinates."
+    end
+
+    json conn, body
+  end
+
+  def topplaces(conn, %{"latitude" => lat, "longitude" => long} = params) do
+
+
+    IO.inspect("calling the right function?")
+    request_url = "https://api.foursquare.com/v2/venues/explore?ll=#{lat},#{long}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
+
+    headers = []
+
+    response = HTTPoison.get!(request_url, headers)
+
+    body = Poison.decode!(response.body)
+
     businesses = Map.get(body, "venue")
 
     if businesses == [] do
@@ -66,42 +85,34 @@ defmodule PlanIt.FoursquareController do
 
   def topplaces(conn, %{"near" => location, "query" => query} = params) do
 
-    token = get_token()
-
-    request_url = "https://api.foursquare.com/v2/venues/explore?near=#{location}&query=#{query}"
-    headers = ["Authorization": "#{token.token_type} #{token.access_token}"]
+    request_url = "https://api.foursquare.com/v2/venues/explore?near=#{location}&query=#{query}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
+    headers = []
 
     response = HTTPoison.get!(request_url, headers)
 
     body = Poison.decode!(response.body)
 
-    businesses = Map.get(body, "venue")
-
-    if businesses == [] do
+    if body == "null" do
       json conn, "No businesses found near those coordinates."
     end
 
-    json conn, businesses
+    json conn, body
   end
 
   def topplaces(conn, %{"near" => location} = params) do
 
-    token = get_token()
+    request_url = "https://api.foursquare.com/v2/venues/explore?near=#{location}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
 
-    request_url = "https://api.foursquare.com/v2/venues/explore?near=#{location}"
-    headers = ["Authorization": "#{token.token_type} #{token.access_token}"]
-
+    headers = []
     response = HTTPoison.get!(request_url, headers)
 
     body = Poison.decode!(response.body)
 
-    businesses = Map.get(body, "businesses")
-
-    if businesses == [] do
+    if body == "null" do
       json conn, "No places found near those coordinates."
     end
 
-    json conn, businesses
+    json conn, body
   end
 
 end
