@@ -399,3 +399,14 @@ curl -X GET http://localhost:4000/api/v1/yelp?latitude=43.7022&longitude=-72.289
 
 ### Get chocolate- and donut-related businesses near Hanover
 curl -X GET http://localhost:4000/api/v1/yelp?latitude=43.7022&longitude=-72.2896&categories=chocolate,donuts
+
+### Get business near Hanover using foursquare api
+curl -X GET http://localhost:4000/api/v1/foursquare?latitude=43.7022&longitude=-72.2896
+or
+curl -X GET http://localhost:4000/api/v1/foursquare?near=Hanover,NH
+
+### Get chocolate- and donut-related businesses near Hanover
+curl -X GET http://localhost:4000/api/v1/foursquare?latitude=43.7022&longitude=-72.2896&categories=chocolate,donuts
+or
+curl -X GET http://localhost:4000/api/v1/foursquare?near=Hanover,NH&categories=chocolate,donuts
+
