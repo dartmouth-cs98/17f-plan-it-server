@@ -56,9 +56,13 @@ defmodule PlanIt.CardController do
     end
 
     existing_cards = Enum.filter(cards, fn(c) -> Map.get(c, "id") != 0 end)
+    map_params = Enum.map(cards, fn(c) -> Map.get(c, "id") end)
 
     repo_messages = Enum.map(existing_cards, fn(c) ->
+      card_params = Enum.find(cards, fn(cc) -> Map.get(cc, "id") == Map.get(c, "id") end)
+
       Repo.get(Card, Map.get(c, "id"))
+      |> Card.changeset(card_params)
       |> Card.changeset(params)
       |> Repo.update()
     end)
@@ -109,7 +113,7 @@ defmodule PlanIt.CardController do
 
 
   # PUT - update an existing card
-    def update(conn, %{"id" => card_id} = params) do
+  def update(conn, %{"id" => card_id} = params) do
     card = Repo.get(Card, card_id)
     changeset = Card.changeset(card, params)
 
