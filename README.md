@@ -317,6 +317,35 @@ package = [
 ]
 ```
 
+#### Update single card (PUT) 
+Update single card. Returnes an error if the card id does not exist.
+
+```
+/api/v1/cards/:id
+
+
+package =  
+{ id: 5,
+type:"hotel",
+     name:"Hanover Inn",
+     city:"hanover",
+     country:"USA",
+     address:"3 Wheelock street",
+     lat:123123.12,
+     long:121231.12312,
+     start_time:"2017-12-12 20:01:01",
+     end_time:"2017-12-13 20:01:01",
+     day_number:1,
+     trip_id:1,
+     travel_duration:900,
+     travel_type:"bike",
+     description:"Best hotel in Hanover",
+     photo_url:""
+}
+
+
+```
+
 
 Returns a list of card objects if create is successful. You'll have to get the new id from this list.
 Returns "BAD" if the update/insert is not successful.
@@ -385,7 +414,12 @@ curl -X POST -d '[
 {"type":"hotel","name":"Hanover Inn","city":"hanover","country":"USA","address":"3 Wheelock street","lat":123123.12,"long":121231.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"},
 {"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"}]' -H "Content-Type: application/json" http://localhost:4000/api/v1/cards
 
+### Update single card
+curl -X PUT -d '
+{"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":1,"travel_duration":"10","travel_type":"bus"}' -H "Content-Type: application/json" http://localhost:4000/api/v1/cards/2
+
 ### Update multiple cards
+Deprecated
 curl -X PUT -d '[
 {"id":0,"type":"new act","name":"boloco","city":"hanover","country":"USA","address":"lebanon street 2","lat":121.12,"long":12123.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"},
 {"id":5,"type":"hotel","name":"Hanover Inn","city":"hanover","country":"USA","address":"3 Wheelock street","lat":123123.12,"long":121231.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10:10:10","travel_type":"uber"},
