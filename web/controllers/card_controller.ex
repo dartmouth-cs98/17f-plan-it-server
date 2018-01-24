@@ -47,12 +47,13 @@ defmodule PlanIt.CardController do
   ## the new card will have an ID of 0
   def create(conn, %{"trip_id" => trip_id, "_json" => cards} = params) do
     new_card = Enum.find(cards, fn(c) -> Map.get(c, "id") == 0 end)
-    IO.inspect(new_card)
-    {status, new_card_changeset} = Repo.insert(Card.changeset(%Card{}, new_card))
+    if new_card != nil do
+      {status, new_card_changeset} = Repo.insert(Card.changeset(%Card{}, new_card))
 
-    if status == :error do
-      error = "error: #{inspect new_card_changeset.errors}"
-      json put_status(conn, 400), error
+      if status == :error do
+        error = "error: #{inspect new_card_changeset.errors}"
+        json put_status(conn, 400), error
+      end
     end
 
     existing_cards = Enum.filter(cards, fn(c) -> Map.get(c, "id") != 0 end)
