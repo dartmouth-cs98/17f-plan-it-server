@@ -156,9 +156,9 @@ defmodule PlanIt.UserController do
       travel_duration: 900
     })
 
-    Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 3, last_visited: Ecto.DateTime.utc})
-    Repo.insert!(%FavoritedTrip{user_id: 2, trip_id: 1, last_visited: Ecto.DateTime.utc})
-    Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 2, last_visited: Ecto.DateTime.utc})
+    Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 3, last_visited: Ecto.DateTime.utc, trip_name: "Fave trip 1"})
+    Repo.insert!(%FavoritedTrip{user_id: 2, trip_id: 1, last_visited: Ecto.DateTime.utc, trip_name: "Fave trip 2"})
+    Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 2, last_visited: Ecto.DateTime.utc, trip_name: "Fave trip 3"})
 
     json conn, []
   end
