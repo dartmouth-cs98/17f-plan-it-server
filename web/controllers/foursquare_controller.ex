@@ -45,7 +45,7 @@ defmodule PlanIt.FoursquareController do
 
   def topplaces(conn, %{"latitude" => lat, "longitude" => long, "categories" => query} = params) do
 
-    request_url = "https://api.foursquare.com/v2/venues/explore?ll=#{lat},#{long}&query=#{query}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
+    request_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}&query=#{query}"
 
     headers = []
 
@@ -66,7 +66,7 @@ defmodule PlanIt.FoursquareController do
 
 
     IO.inspect("calling the right function?")
-    request_url = "https://api.foursquare.com/v2/venues/explore?ll=#{lat},#{long}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
+    request_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}"
 
     headers = []
 
@@ -85,7 +85,8 @@ defmodule PlanIt.FoursquareController do
 
   def topplaces(conn, %{"near" => location, "categories" => query} = params) do
 
-    request_url = "https://api.foursquare.com/v2/venues/explore?near=#{location}&query=#{query}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
+    request_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&near=#{location}&query=#{query}"
+
     headers = []
 
     response = HTTPoison.get!(request_url, headers)
@@ -101,7 +102,7 @@ defmodule PlanIt.FoursquareController do
 
   def topplaces(conn, %{"near" => location} = params) do
 
-    request_url = "https://api.foursquare.com/v2/venues/explore?near=#{location}&client_id=TBYPUBXPXKEI1LF3SFWUWLHUGJUNIE0QL5ZOMIIYOZX3J2KB&client_secret=D2RJSPBWSEO5PRNQBF1IQ1S001PLYSHMUSM02RHGS2XFNRHS&v=20180131"
+    request_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&near=#{location}"
 
     headers = []
     response = HTTPoison.get!(request_url, headers)
