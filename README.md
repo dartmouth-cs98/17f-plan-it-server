@@ -317,6 +317,8 @@ package = [
 ]
 ```
 
+Returns a list of the updated cards sorted by start time. Returns any error messages appended to the end of the list. Cards with invalid ids error out and are not created/inserted. Instead an error message is added to the end of the list of updated cards. 
+
 #### Update single card (PUT) 
 Update single card. Returnes an error if the card id does not exist.
 
