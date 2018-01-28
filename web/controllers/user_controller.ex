@@ -161,8 +161,9 @@ defmodule PlanIt.UserController do
     Repo.insert!(%FavoritedTrip{user_id: 2, trip_id: 1, last_visited: Ecto.DateTime.utc, trip_name: "Fave trip 2"})
     Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 2, last_visited: Ecto.DateTime.utc, trip_name: "Fave trip 3"})
 
+    Repo.insert!(%EditPermission{user_id: 1, trip_id: 1})
     Repo.insert!(%EditPermission{user_id: 1, trip_id: 2})
-    Repo.insert!(%EditPermission{user_id: 1, trip_id: 3})
+    Repo.insert!(%EditPermission{user_id: 2, trip_id: 3})
 
 
     json conn, []

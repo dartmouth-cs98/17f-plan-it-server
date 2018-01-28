@@ -71,6 +71,8 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       timestamps()
     end
 
+    create unique_index(:edit_permission, [:user_id, :trip_id], name: :edit_permission_index_name)
+
     create table(:token) do
       add :service, :string
       add :token_type, :string

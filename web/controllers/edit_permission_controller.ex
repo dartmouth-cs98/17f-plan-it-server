@@ -40,37 +40,50 @@ defmodule PlanIt.EditPermissionController do
     json conn, permission_users
   end
 
-  # POST - give edit permissions to a list of users
-  def create(conn, %{"_json" => users} = params) do
+  # POST - give edit permissions to a user
+  def create(conn, params) do
 
-      changesets = Enum.map(users, fn(u) ->
-      	EditPermission.changeset(%EditPermission{}, u)
-      end)
+      {message, changeset} = EditPermission.changeset(%EditPermission{}, params)
+      |> Repo.insert
 
-      Enum.each(changesets, fn(u) ->
-        case Repo.insert(u) do
-          {:ok, changeset} -> nil
-          {:error, changeset} -> json put_status(conn, 400), "error: #{inspect changeset.errors}"
-        end
-      end)
+      if message == :error  do
+        error = "error: #{inspect changeset.errors}"
+        json put_status(conn, 400), error
+      end
 
       json conn, "ok"
   end
 
-
   # DELETE - remove edit permission for a given user and trip
   def remove(conn, %{"user_id" => user_id, "trip_id" => trip_id}) do
+    if user_id == nil or trip_id == nil do
+      json put_status(conn, 400), "no trip_id or user_id invalid"
+    end
 
-    permission_user = (from p in EditPermission,
-      where: p.user_id == ^user_id and p.trip_id == ^trip_id,
-      select: p
-    ) |> Repo.one
+    creator = (from t in PlanIt.Trip,
+      where: t.id == ^trip_id,
+      select: t.user_id)
+      |> Repo.one
 
-    case Repo.delete permission_user do
-      {:ok, struct} -> json conn, "ok"
-      {:error, changeset} -> json put_status(conn, 400), "failed to delete"
+    IO.inspect(creator)
+    IO.inspect(user_id)
+
+    if user_id == "#{creator}" do
+      IO.inspect("hello")
+      json conn, "cannot remove permissions for creator of trip"
+    else
+
+      IO.inspect("BLAH")
+      permission_user = (from p in EditPermission,
+        where: p.user_id == ^user_id and p.trip_id == ^trip_id,
+        select: p
+      ) |> Repo.one
+
+      case Repo.delete permission_user do
+        {:ok, struct} -> json conn, "ok"
+        {:error, changeset} -> json put_status(conn, 400), "failed to delete"
+      end
     end
   end
-
 end
 
