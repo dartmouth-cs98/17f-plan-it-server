@@ -57,23 +57,29 @@ defmodule PlanIt.CardController do
     end
 
     existing_cards = Enum.filter(cards, fn(c) -> Map.get(c, "id") != 0 end)
-    map_params = Enum.map(cards, fn(c) -> Map.get(c, "id") end)
 
     repo_messages = Enum.map(existing_cards, fn(c) ->
       card_params = Enum.find(cards, fn(cc) -> Map.get(cc, "id") == Map.get(c, "id") end)
 
-      Repo.get(Card, Map.get(c, "id"))
-      |> Card.changeset(card_params)
-      |> Card.changeset(params)
-      |> Repo.update()
+      current_card = Repo.get(Card, Map.get(c, "id"))
+
+      if current_card != nil do
+        current_card
+        |> Card.changeset(card_params)
+        |> Card.changeset(params)
+        |> Repo.update()
+      else
+        "Card id: #{Map.get(c, "id")} was not found in database"
+      end
     end)
 
-    changesets = Enum.map(repo_messages, fn(c) ->
+    changesets_errors = Enum.map(repo_messages, fn(c) ->
       case c do
         {:ok, changeset} -> changeset
-        _ -> nil
+        {:error, message} -> message
+        _ -> c
       end
-    end) |> Enum.filter(fn(i) -> i end)
+    end)
 
     messages = Enum.map(repo_messages, fn(c) ->
       case c do
@@ -82,7 +88,23 @@ defmodule PlanIt.CardController do
       end
     end) |> Enum.filter(fn(i) -> i end)
 
-    return_package = changesets ++ [new_card_changeset]
+
+    return_package = if new_card_changeset do
+      changesets_errors ++ [new_card_changeset]
+    else
+      changesets_errors
+    end
+
+    return_package = Enum.sort(return_package, fn(a, b) ->
+      cond do
+        is_binary(a) ->
+          false
+        is_binary(b) ->
+          true
+        true ->
+          a.start_time >= b.start_time
+      end
+    end)
 
     json conn, return_package
   end
