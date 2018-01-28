@@ -92,6 +92,45 @@ payload = {
 Returns "ok" if update is successful.
 Returns 400 and an error message if the update is not successful.
 
+## Permissions
+#### Get all users who have permission to edit a trip (GET)
+```
+/api/v1/permissions?trip_id=:id
+```
+
+Returns a list of user ids that correspond to the users that have permission to edit the trip. The user who created the trip is included in this list as well.
+
+#### Check if a user has permission to edit a trip (GET)
+```
+/api/v1/permissions?trip_id=:trip_id&user_id=:user_id
+```
+
+Returns true if the given user has permission to edit the given trip.
+Returns false if the given user does not have permission to edit the given trip.
+
+#### Give a user permission to edit a trip (POST)
+
+```
+/api/v1/permissions
+
+payload = {
+  user_id: 10,
+  trip_id: 5
+}
+
+```
+
+Returns "ok" if insert is successful.
+Returns 400 and an error message if not successful.
+
+#### Remove editing permissions for a given user and trip
+```
+/api/v1/permissions?user_id=:user_id&trip_id=:trip_id
+```
+
+Returns "ok" if delete is successful.
+Returns 400 and an error message if not successful.
+
 ## Trips
 
 #### Get all "published" trips to display on the explore page (GET)
@@ -403,6 +442,9 @@ curl -X POST -d '{"fname":"david","lname":"walsh","email":"davidwalsh@example.co
 ### Update a user
 curl -X PUT -d '{"fname":"john","email":"davidwalsh@example.com"}' -H "Content-Type: application/json" http://localhost:4000/api/v1/users/1
 
+### Give edit permissions to a user
+curl -X POST -d '{"user_id":4,"trip_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v1/permissions
+
 ### Create a trip 
 curl -X POST -d '{"name":"updated trip name","user_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v1/trips
 
@@ -427,18 +469,18 @@ curl -X POST -d '[
 ### Update a card
 curl -X PUT -d '{"lat":1123.123}' -H "Content-Type: application/json" http://localhost:4000/api/v1/cards/1
 
-### Get businesses near Hanover
+### Get businesses near Hanover with Yelp API
 curl -X GET http://localhost:4000/api/v1/yelp?latitude=43.7022&longitude=-72.2896
 
-### Get chocolate- and donut-related businesses near Hanover
+### Get chocolate- and donut-related businesses near Hanover with Yelp API
 curl -X GET http://localhost:4000/api/v1/yelp?latitude=43.7022&longitude=-72.2896&categories=chocolate,donuts
 
-### Get business near Hanover using foursquare api
+### Get business near Hanover with Foursquare API
 curl -X GET http://localhost:4000/api/v1/foursquare?latitude=43.7022&longitude=-72.2896
 or
 curl -X GET http://localhost:4000/api/v1/foursquare?near=Hanover,NH
 
-### Get chocolate- and donut-related businesses near Hanover
+### Get chocolate- and donut-related businesses near Hanover with Foursquare API
 curl -X GET http://localhost:4000/api/v1/foursquare?latitude=43.7022&longitude=-72.2896&categories=chocolate,donuts
 or
 curl -X GET http://localhost:4000/api/v1/foursquare?near=Hanover,NH&categories=chocolate,donuts
