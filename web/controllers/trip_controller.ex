@@ -2,6 +2,7 @@ defmodule PlanIt.TripController do
   alias PlanIt.Repo
   alias PlanIt.Card
   alias PlanIt.Trip
+  alias PlanIt.EditPermission
   import Ecto.Query
 
   use PlanIt.Web, :controller
@@ -49,6 +50,19 @@ defmodule PlanIt.TripController do
 
     if message == :error  do
       error = "error: #{inspect changeset.errors}"
+      json put_status(conn, 400), error
+    end
+
+    # add the creator of the trip in the permissions table as well
+    params2 = %{
+      "user_id": changeset.user_id,
+      "trip_id": changeset.id
+    }
+    {message2, changeset2} = EditPermission.changeset(%EditPermission{}, params2)
+    |> Repo.insert
+
+    if message2 == :error  do
+      error = "error: #{inspect changeset2.errors}"
       json put_status(conn, 400), error
     end
 
