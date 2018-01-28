@@ -81,14 +81,6 @@ defmodule PlanIt.CardController do
       end
     end)
 
-    messages = Enum.map(repo_messages, fn(c) ->
-      case c do
-        {:error, message} -> message
-        _ -> nil
-      end
-    end) |> Enum.filter(fn(i) -> i end)
-
-
     return_package = if new_card_changeset do
       changesets_errors ++ [new_card_changeset]
     else
