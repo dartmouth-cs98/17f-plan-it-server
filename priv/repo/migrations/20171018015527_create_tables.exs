@@ -64,6 +64,13 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       timestamps()
     end
 
+    create table(:edit_permission) do
+      add :user_id, references(:user)
+      add :trip_id, references(:trip, on_delete: :delete_all)
+
+      timestamps()
+    end
+
     create table(:token) do
       add :service, :string
       add :token_type, :string
