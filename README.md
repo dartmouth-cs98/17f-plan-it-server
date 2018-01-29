@@ -210,6 +210,26 @@ Increments or decrements the number of upvotes or downvotes by 1
 Returns "ok" if upvote/downvote is successful. 
 Returns 400 and an error message if the upvote/downvote is not successful.
 
+## Published trips
+#### Get all published trips ordered in various ways (GET)
+
+```
+/api/v1/published?order=popular
+
+/api/v1/published?order=publish_date
+
+/api/v1/published?order=trending
+
+/api/v1/published
+```
+
+Popular - returns a list of published trips ordered by number of upvotes.
+Publish_date - returns a list of published trips ordered by the date the trip itself was created.
+Trending - returns a list of published trips ordered by the most recent favorited trips.
+No param - returns a list of published trips in no particular order.
+
+Returns 400 and an error message if invalid parameters are used.
+
 ## Favorited trips
 #### Get all trips favorited by a user (GET)
 ```

@@ -7,7 +7,6 @@ defmodule PlanIt.PublishedTripController do
 
   use PlanIt.Web, :controller
 
-
   # GET - get published trips ordered by parameter
   def index(conn, %{"order" => order } = params) do
 
@@ -50,13 +49,23 @@ defmodule PlanIt.PublishedTripController do
 		        ) |> Repo.all
 
 	        _ ->
-	      		json put_status(conn, 400), "Invalid ordering provided. 
-	      		Valid orderings are 'popular', 'publish_date', and 'trending'"
+	      		json put_status(conn, 400), "Invalid ordering provided. Valid orderings are 'popular', 'publish_date', and 'trending'"
 	    end
 
-	IO.inspect(trips)
+    json conn, trips
+
+  end
+
+  # GET - get published trips in no particular order
+  def index(conn, _params) do
+
+    trips = (from t in PlanIt.Trip,
+		        where: t.publish == true,
+		        select: t
+		      ) |> Repo.all
 
     json conn, trips
+
   end
 
 end
