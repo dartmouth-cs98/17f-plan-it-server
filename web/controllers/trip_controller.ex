@@ -44,9 +44,7 @@ defmodule PlanIt.TripController do
 
   # POST - insert a new trip
   def create(conn, params) do
-
-    {message, changeset} = Trip.changeset(%Trip{}, params)
-    |> Repo.insert
+    {message, changeset} = Repo.insert(Trip.changeset(%Trip{}, params))
 
     if message == :error  do
       error = "error: #{inspect changeset.errors}"
@@ -58,8 +56,8 @@ defmodule PlanIt.TripController do
       "user_id": changeset.user_id,
       "trip_id": changeset.id
     }
-    {message2, changeset2} = EditPermission.changeset(%EditPermission{}, params2)
-    |> Repo.insert
+
+    {message2, changeset2} = Repo.insert(EditPermission.changeset(%EditPermission{}, params2))
 
     if message2 == :error  do
       error = "error: #{inspect changeset2.errors}"
