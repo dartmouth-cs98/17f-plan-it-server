@@ -94,7 +94,8 @@ defmodule PlanIt.CardController do
         is_binary(b) ->
           true
         true ->
-          a.start_time >= b.start_time
+          IO.inspect(a.start_time)
+          a.start_time <= b.start_time
       end
     end)
 
