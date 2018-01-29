@@ -44,6 +44,8 @@ defmodule PlanIt.Trip do
   end
 
   def changeset(trip, params) do
-    trip |> cast(params, [:name, :publish, :upvotes, :downvotes, :photo_url, :start_time, :end_time, :user_id])
+    trip
+    |> cast(params, [:name, :publish, :upvotes, :downvotes, :photo_url, :start_time, :end_time, :user_id])
+    |> validate_required([:name, :user_id])
   end
 end

@@ -448,6 +448,9 @@ curl -X POST -d '{"user_id":4,"trip_id":1}' -H "Content-Type: application/json" 
 ### Create a trip 
 curl -X POST -d '{"name":"updated trip name","user_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v1/trips
 
+### Copy an existing trip
+curl -X POST -d '{"user_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v1/trips?original_id=1
+
 ### Update a trip
 curl -X PUT -d '{"name":"updated trip name"}' -H "Content-Type: application/json" http://localhost:4000/api/v1/trips/1
 
