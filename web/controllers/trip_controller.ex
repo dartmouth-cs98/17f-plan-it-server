@@ -49,7 +49,6 @@ defmodule PlanIt.TripController do
       where: t.id == ^original_id,
       select: t,
       preload: [card: ^card_query]) |> Repo.one
-      #trips is a list of trips
 
 
       if Map.get(params, "name") == nil do
@@ -74,9 +73,20 @@ defmodule PlanIt.TripController do
         |> Map.put(:trip_id, changeset.id)
       end)
 
-      Enum.each(new_cards, fn(c) -> Repo.insert(Card.changeset(%Card{}, c)) end)
+      repo_messages = Enum.each(new_cards, fn(c) -> Repo.insert(Card.changeset(%Card{}, c)) end)
 
-    json conn, changeset.id
+      changeset_errors = Enum.map(repo_messages, fn(m) ->
+        case m do
+          {:ok, changeset} -> changeset
+          {:error, message} -> json put_status(conn, 400), "error: #{inspect message}"
+          _ -> m
+          end
+      end)
+
+
+
+
+      json conn, changeset.id
   end
 
   # POST - insert a new trip
