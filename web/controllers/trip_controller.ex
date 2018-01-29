@@ -57,19 +57,23 @@ defmodule PlanIt.TripController do
       end
 
       {message, changeset} = Trip.insert_trip(params)
+      if message == :error  do
+        error = "error: #{inspect changeset.errors}"
+        json put_status(conn, 400), error
+      end
+
 
       new_cards = Enum.map(trip.card, fn(c) ->
         c
-        |> Map.delete(:id)
-        |> Map.delete(:trip)
         |> Map.delete(:__meta__)
         |> Map.delete(:__struct__)
         |> Map.delete(:updated_at)
         |> Map.delete(:created_at)
+        |> Map.delete(:id)
+        |> Map.delete(:trip)
         |> Map.put(:trip_id, changeset.id)
       end)
 
-      IO.inspect(new_cards)
       Enum.each(new_cards, fn(c) -> Repo.insert(Card.changeset(%Card{}, c)) end)
 
     json conn, changeset.id
