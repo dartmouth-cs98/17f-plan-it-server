@@ -65,7 +65,6 @@ defmodule PlanIt.FoursquareController do
   def topplaces(conn, %{"latitude" => lat, "longitude" => long} = params) do
 
 
-    IO.inspect("calling the right function?")
     request_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}"
 
     headers = []

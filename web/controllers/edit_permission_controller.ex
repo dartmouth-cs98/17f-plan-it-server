@@ -15,8 +15,7 @@ defmodule PlanIt.EditPermissionController do
 
     permission_users = (from p in PlanIt.EditPermission,
       where: p.trip_id == ^trip_id and p.user_id == ^user_id,
-      select: p)
-      |> Repo.one
+      select: p) |> Repo.one
 
     if permission_users == nil do
       json conn, false
@@ -34,17 +33,14 @@ defmodule PlanIt.EditPermissionController do
 
     permission_users = (from p in PlanIt.EditPermission,
       where: p.trip_id == ^trip_id,
-      select: p.user_id)
-      |> Repo.all
+      select: p.user_id) |> Repo.all
 
     json conn, permission_users
   end
 
   # POST - give edit permissions to a user
   def create(conn, params) do
-
-      {message, changeset} = EditPermission.changeset(%EditPermission{}, params)
-      |> Repo.insert
+      {message, changeset} = EditPermission.changeset(%EditPermission{}, params) |> Repo.insert
 
       if message == :error  do
         error = "error: #{inspect changeset.errors}"
@@ -62,22 +58,15 @@ defmodule PlanIt.EditPermissionController do
 
     creator = (from t in PlanIt.Trip,
       where: t.id == ^trip_id,
-      select: t.user_id)
-      |> Repo.one
+      select: t.user_id) |> Repo.one
 
-    IO.inspect(creator)
-    IO.inspect(user_id)
 
     if user_id == "#{creator}" do
-      IO.inspect("hello")
       json conn, "cannot remove permissions for creator of trip"
     else
-
-      IO.inspect("BLAH")
       permission_user = (from p in EditPermission,
         where: p.user_id == ^user_id and p.trip_id == ^trip_id,
-        select: p
-      ) |> Repo.one
+        select: p) |> Repo.one
 
       case Repo.delete permission_user do
         {:ok, struct} -> json conn, "ok"

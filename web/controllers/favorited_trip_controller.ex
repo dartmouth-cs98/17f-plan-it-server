@@ -9,7 +9,6 @@ defmodule PlanIt.FavoritedTripController do
 
   # GET - get all trips favorited by a user
   def index(conn, %{"user_id" => user_id } = params) do
-    IO.inspect(params)
     if user_id == nil do
       json put_status(conn, 400), "no user_id provided"
     end
