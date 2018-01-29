@@ -35,7 +35,17 @@ defmodule PlanIt.PublishedTripController do
 		                left_join: t in PlanIt.Trip, 
 		                on: ft.trip_id == t.id, 
 		                where: t.publish == true, 
-		                select: ft,
+		                select: %{id: t.id,
+		                          user_id: t.user_id,
+		                          name: t.name,
+		                          upvotes: t.upvotes,
+		                          downvotes: t.downvotes,
+		                          photo_url: t.photo_url,
+		                          publish: t.publish,
+		                          start_time: t.start_time,
+		                          end_time: t.end_time,
+		                          inserted_at: ft.inserted_at,
+		                          updated_at: ft.updated_at},
 		                order_by: [desc: :inserted_at]
 		        ) |> Repo.all
 
@@ -44,9 +54,7 @@ defmodule PlanIt.PublishedTripController do
 	      		Valid orderings are 'popular', 'publish_date', and 'trending'"
 	    end
 
-
-
-    IO.inspect(trips)
+	IO.inspect(trips)
 
     json conn, trips
   end
