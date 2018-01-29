@@ -33,7 +33,6 @@ defmodule PlanIt.TripController do
 
     trips = (from t in PlanIt.Trip,
       where: t.id == ^trip_id,
-
       select: t,
       preload: [card: ^card_query])
       |> Repo.all
@@ -41,32 +40,51 @@ defmodule PlanIt.TripController do
     json conn, trips
   end
 
+  # POST - insert a copy of an existing trip
+  def create(conn, %{"original_id" => original_id } = params) do
+    card_query = from c in Card,
+      order_by: c.start_time
+
+    trip = (from t in PlanIt.Trip,
+      where: t.id == ^original_id,
+      select: t,
+      preload: [card: ^card_query]) |> Repo.one
+      #trips is a list of trips
+
+
+      if Map.get(params, "name") == nil do
+        params = Map.put(params, "name", trip.name)
+      end
+
+      {message, changeset} = Trip.insert_trip(params)
+
+      new_cards = Enum.map(trip.card, fn(c) ->
+        c
+        |> Map.delete(:id)
+        |> Map.delete(:trip)
+        |> Map.delete(:__meta__)
+        |> Map.delete(:__struct__)
+        |> Map.delete(:updated_at)
+        |> Map.delete(:created_at)
+        |> Map.put(:trip_id, changeset.id)
+      end)
+
+      IO.inspect(new_cards)
+      Enum.each(new_cards, fn(c) -> Repo.insert(Card.changeset(%Card{}, c)) end)
+
+    json conn, changeset.id
+  end
+
   # POST - insert a new trip
   def create(conn, params) do
     {message, changeset} = Trip.insert_trip(params)
-    #Repo.insert(Trip.changeset(%Trip{}, params))
 
     if message == :error  do
       error = "error: #{inspect changeset.errors}"
       json put_status(conn, 400), error
     end
 
-    #message2 = Trip.add_edit_permission(changeset)
-
-
     # add the creator of the trip in the permissions table as well
-
-    # params2 = %{
-    #   "user_id": changeset.user_id,
-    #   "trip_id": changeset.id
-    # }
-    # {message2, changeset2} = Repo.insert(EditPermission.changeset(%EditPermission{}, params2))
-
-    # if message2 == :error  do
-    #   error = "error: #{inspect changeset2.errors}"
-    #   json put_status(conn, 400), error
-    # end
-
     json conn, changeset.id
   end
 
