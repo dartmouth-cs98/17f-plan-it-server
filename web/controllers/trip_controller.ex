@@ -14,8 +14,7 @@ defmodule PlanIt.TripController do
 
     trips = (from t in PlanIt.Trip,
       where: t.user_id == ^user_id,
-      select: t)
-      |> Repo.all
+      select: t) |> Repo.all
 
     json conn, trips
   end
@@ -44,25 +43,29 @@ defmodule PlanIt.TripController do
 
   # POST - insert a new trip
   def create(conn, params) do
-    {message, changeset} = Repo.insert(Trip.changeset(%Trip{}, params))
+    {message, changeset} = Trip.insert_trip(params)
+    #Repo.insert(Trip.changeset(%Trip{}, params))
 
     if message == :error  do
       error = "error: #{inspect changeset.errors}"
       json put_status(conn, 400), error
     end
 
+    #message2 = Trip.add_edit_permission(changeset)
+
+
     # add the creator of the trip in the permissions table as well
-    params2 = %{
-      "user_id": changeset.user_id,
-      "trip_id": changeset.id
-    }
 
-    {message2, changeset2} = Repo.insert(EditPermission.changeset(%EditPermission{}, params2))
+    # params2 = %{
+    #   "user_id": changeset.user_id,
+    #   "trip_id": changeset.id
+    # }
+    # {message2, changeset2} = Repo.insert(EditPermission.changeset(%EditPermission{}, params2))
 
-    if message2 == :error  do
-      error = "error: #{inspect changeset2.errors}"
-      json put_status(conn, 400), error
-    end
+    # if message2 == :error  do
+    #   error = "error: #{inspect changeset2.errors}"
+    #   json put_status(conn, 400), error
+    # end
 
     json conn, changeset.id
   end
