@@ -6,6 +6,7 @@ defmodule PlanIt.TripController do
   import Ecto.Query
 
   use PlanIt.Web, :controller
+  
   # GET - get all trips created by a user
   def index(conn, %{"user_id" => user_id } = params) do
     if user_id == nil do
