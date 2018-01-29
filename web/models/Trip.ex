@@ -1,5 +1,7 @@
 defmodule PlanIt.Trip do
   use Ecto.Schema
+  alias PlanIt.EditPermission
+  alias PlanIt.Repo
 
   import Ecto.Changeset
 
@@ -19,6 +21,15 @@ defmodule PlanIt.Trip do
     has_many :favorited_trip, PlanIt.Trip
 
     timestamps()
+  end
+
+  def add_edit_permission(changeset) do
+    params = %{
+      "user_id": changeset.user_id,
+      "trip_id": changeset.id
+    }
+
+    Repo.insert!(EditPermission.changeset(%EditPermission{}, params))
   end
 
   def changeset(trip, params) do
