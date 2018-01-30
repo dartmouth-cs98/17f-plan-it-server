@@ -85,8 +85,6 @@ defmodule PlanIt.TripController do
       end)
 
 
-
-
       json conn, changeset.id
   end
 
@@ -99,7 +97,6 @@ defmodule PlanIt.TripController do
       json put_status(conn, 400), error
     end
 
-    # add the creator of the trip in the permissions table as well
     json conn, changeset.id
   end
 

@@ -43,7 +43,7 @@ defmodule PlanIt.FoursquareController do
     end
   end
 
-  def topplaces(conn, %{"latitude" => lat, "longitude" => long, "categories" => query} = params) do
+  def topplaces(conn, %{"latitude" => lat, "longitude" => long, "category" => query} = params) do
 
     request_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}&query=#{query}"
 
@@ -82,7 +82,7 @@ defmodule PlanIt.FoursquareController do
     json conn, body
   end
 
-  def topplaces(conn, %{"near" => location, "categories" => query} = params) do
+  def topplaces(conn, %{"near" => location, "category" => query} = params) do
 
     request_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&near=#{location}&query=#{query}"
 

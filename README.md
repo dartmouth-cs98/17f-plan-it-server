@@ -476,6 +476,9 @@ curl -X POST -d '{"user_id":1}' -H "Content-Type: application/json" http://local
 ### Update a trip
 curl -X PUT -d '{"name":"updated trip name"}' -H "Content-Type: application/json" http://localhost:4000/api/v1/trips/1
 
+### Favorite a trip
+curl -X POST -d '{"user_id":1,"trip_id":3}' -H "Content-Type: application/json" http://localhost:4000/api/v1/favorited
+
 ### Create cards
 curl -X POST -d '[
 {"type":"hotel","name":"Hanover Inn","city":"hanover","country":"USA","address":"3 Wheelock street","lat":123123.12,"long":121231.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"},
