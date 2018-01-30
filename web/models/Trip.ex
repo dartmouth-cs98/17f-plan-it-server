@@ -2,7 +2,7 @@ defmodule PlanIt.Trip do
   use Ecto.Schema
   alias PlanIt.EditPermission
   alias PlanIt.Repo
-
+  
   import Ecto.Changeset
 
   @primary_key {:id, :id, autogenerate: true}

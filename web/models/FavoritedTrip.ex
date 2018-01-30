@@ -1,6 +1,10 @@
 defmodule PlanIt.FavoritedTrip do
-  alias PlanIt.FavoritedTrip
   use Ecto.Schema
+
+  alias PlanIt.FavoritedTrip
+  alias PlanIt.Repo
+  alias PlanIt.Trip
+
 
   import Ecto.Changeset
 
@@ -16,7 +20,6 @@ defmodule PlanIt.FavoritedTrip do
   end
 
   def insert_favorited_trip(params) do
-    IO.inspect("insert_favorited_trip")
 
     {message, changeset}  = Repo.insert(PlanIt.FavoritedTrip.changeset(%PlanIt.FavoritedTrip{}, params))
     message2 = PlanIt.FavoritedTrip.upvote_trip(changeset)
@@ -29,8 +32,7 @@ defmodule PlanIt.FavoritedTrip do
   end
 
   def upvote_trip(changeset) do
-    IO.inspect("upvote_trip")
-    
+
     trip = Repo.get(Trip, changeset.trip_id)
     num_upvotes = trip.upvotes + 1
 
@@ -38,7 +40,7 @@ defmodule PlanIt.FavoritedTrip do
       "upvotes": num_upvotes
     }
 
-    changeset = FavoritedTrip.changeset(trip, params)
+    changeset = Trip.changeset(trip, params)
 
     Repo.update(changeset)
   end
