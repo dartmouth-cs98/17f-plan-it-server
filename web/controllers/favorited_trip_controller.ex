@@ -31,8 +31,7 @@ defmodule PlanIt.FavoritedTripController do
   # POST - insert a new favorited trip
   def create(conn, params) do
 
-      {message, changeset} = FavoritedTrip.changeset(%FavoritedTrip{}, params)
-      |> Repo.insert
+      {message, changeset} = FavoritedTrip.insert_favorited_trip(params)
 
       if message == :error  do
         error = "error: #{inspect changeset.errors}"
