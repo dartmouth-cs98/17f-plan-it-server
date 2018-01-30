@@ -30,9 +30,10 @@ defmodule PlanIt.Router do
       get "/downvote", TripController, :downvote
     end
 
-
-
     resources "/cards", CardController, only: [:index, :create, :update, :delete]
+
+    resources "/permissions", EditPermissionController, only: [:index, :create]
+    delete "/permissions", EditPermissionController, :remove
 
     resources "/favorited", FavoritedTripController, only: [:index, :create]
     put "/favorited", FavoritedTripController, :change

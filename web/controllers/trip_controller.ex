@@ -2,6 +2,7 @@ defmodule PlanIt.TripController do
   alias PlanIt.Repo
   alias PlanIt.Card
   alias PlanIt.Trip
+  alias PlanIt.EditPermission
   import Ecto.Query
 
   use PlanIt.Web, :controller
@@ -13,8 +14,7 @@ defmodule PlanIt.TripController do
 
     trips = (from t in PlanIt.Trip,
       where: t.user_id == ^user_id,
-      select: t)
-      |> Repo.all
+      select: t) |> Repo.all
 
     json conn, trips
   end
@@ -33,7 +33,6 @@ defmodule PlanIt.TripController do
 
     trips = (from t in PlanIt.Trip,
       where: t.id == ^trip_id,
-
       select: t,
       preload: [card: ^card_query])
       |> Repo.all
@@ -41,17 +40,65 @@ defmodule PlanIt.TripController do
     json conn, trips
   end
 
+  # POST - insert a copy of an existing trip
+  def create(conn, %{"original_id" => original_id } = params) do
+    card_query = from c in Card,
+      order_by: c.start_time
+
+    trip = (from t in PlanIt.Trip,
+      where: t.id == ^original_id,
+      select: t,
+      preload: [card: ^card_query]) |> Repo.one
+
+
+      if Map.get(params, "name") == nil do
+        params = Map.put(params, "name", trip.name)
+      end
+
+      {message, changeset} = Trip.insert_trip(params)
+      if message == :error  do
+        error = "error: #{inspect changeset.errors}"
+        json put_status(conn, 400), error
+      end
+
+
+      new_cards = Enum.map(trip.card, fn(c) ->
+        c
+        |> Map.delete(:__meta__)
+        |> Map.delete(:__struct__)
+        |> Map.delete(:updated_at)
+        |> Map.delete(:created_at)
+        |> Map.delete(:id)
+        |> Map.delete(:trip)
+        |> Map.put(:trip_id, changeset.id)
+      end)
+
+      repo_messages = Enum.each(new_cards, fn(c) -> Repo.insert(Card.changeset(%Card{}, c)) end)
+
+      changeset_errors = Enum.map(repo_messages, fn(m) ->
+        case m do
+          {:ok, changeset} -> changeset
+          {:error, message} -> json put_status(conn, 400), "error: #{inspect message}"
+          _ -> m
+          end
+      end)
+
+
+
+
+      json conn, changeset.id
+  end
+
   # POST - insert a new trip
   def create(conn, params) do
-
-    {message, changeset} = Trip.changeset(%Trip{}, params)
-    |> Repo.insert
+    {message, changeset} = Trip.insert_trip(params)
 
     if message == :error  do
       error = "error: #{inspect changeset.errors}"
       json put_status(conn, 400), error
     end
 
+    # add the creator of the trip in the permissions table as well
     json conn, changeset.id
   end
 
