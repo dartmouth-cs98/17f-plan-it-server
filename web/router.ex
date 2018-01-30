@@ -39,6 +39,8 @@ defmodule PlanIt.Router do
     put "/favorited", FavoritedTripController, :change
     delete "/favorited", FavoritedTripController, :remove
 
+    resources "/published", PublishedTripController, only: [:index]
+
     get "/yelp", YelpController, :topplaces
     get "/foursquare", FoursquareController, :topplaces
   end

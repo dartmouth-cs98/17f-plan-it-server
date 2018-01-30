@@ -90,12 +90,14 @@ defmodule PlanIt.UserController do
       user_id: 1,
       start_time: DateTime.from_naive!(~N[2018-05-24 00:00:00], "Etc/UTC"),
       end_time: DateTime.from_naive!(~N[2018-05-26 00:00:00], "Etc/UTC"),
+      upvotes: 5
     })
     Repo.insert!(%Trip{
       name: "Turlock Trip",
       publish: true,
       photo_url: "https://blogjob.com/lifeandliving/files/2014/08/Turlock-california.jpg",
-      user_id: 1
+      user_id: 1,
+      upvotes: 10
     })
     Repo.insert!(%Trip{
       name: "Seoul Eating Adventure",
