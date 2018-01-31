@@ -58,11 +58,14 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
     create table(:favorited_trip) do
       add :last_visited, :utc_datetime
       add :trip_name, :string 
+      add :photo_url, :string
       add :user_id, references(:user)
       add :trip_id, references(:trip, on_delete: :delete_all)
 
       timestamps()
     end
+
+    create unique_index(:favorited_trip, [:user_id, :trip_id], name: :unique_favorited_trip)
 
     create table(:edit_permission) do
       add :user_id, references(:user)
@@ -71,7 +74,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       timestamps()
     end
 
-    create unique_index(:edit_permission, [:user_id, :trip_id], name: :edit_permission_index_name)
+    create unique_index(:edit_permission, [:user_id, :trip_id], name: :unique_edit_permission)
 
     create table(:token) do
       add :service, :string

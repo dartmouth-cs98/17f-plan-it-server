@@ -14,7 +14,7 @@ defmodule PlanIt.EditPermission do
   def changeset(edit_permission, params) do
     edit_permission
       |> cast(params, [:user_id, :trip_id])
-      |> unique_constraint(:uniqueindex, name: :edit_permission_index_name)
+      |> unique_constraint(:uniqueindex, name: :unique_edit_permission)
 
   end
 end
