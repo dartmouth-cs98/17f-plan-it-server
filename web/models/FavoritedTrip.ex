@@ -22,7 +22,21 @@ defmodule PlanIt.FavoritedTrip do
 
   def insert_favorited_trip(params) do
 
-    {message, changeset}  = Repo.insert(PlanIt.FavoritedTrip.changeset(%PlanIt.FavoritedTrip{}, params))
+    # Insert into favorited_trip table
+    IO.inspect(params)
+    trip = Repo.get(Trip, params.trip_id)
+    trip_name = trip.name
+    photo_url = trip.photo_url
+
+    new_params = %{
+      "trip_id": params.trip_id,
+      "user_id": params.used_id,
+      "trip_name": trip_name,
+      "photo_url": photo_url
+    }
+    {message, changeset}  = Repo.insert(PlanIt.FavoritedTrip.changeset(%PlanIt.FavoritedTrip{}, new_params))
+
+    # Call upvote_trip to automatically upvote upon favoriting
     message2 = PlanIt.FavoritedTrip.upvote_trip(changeset)
     case {message, message2} do
       {:ok, :ok} -> {:ok, changeset}
