@@ -16,7 +16,7 @@ defmodule PlanIt.FavoritedTripController do
     favorited_trips = (from t in PlanIt.FavoritedTrip,
       where: t.user_id == ^user_id,
       select: t,
-      order_by: [desc: :last_visited])
+      order_by: [desc: :inserted_at])
       |> Repo.all
 
     json conn, favorited_trips
