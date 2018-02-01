@@ -23,14 +23,16 @@ defmodule PlanIt.FavoritedTrip do
   def insert_favorited_trip(params) do
 
     # Insert into favorited_trip table
+    IO.inspect("params:")
     IO.inspect(params)
-    trip = Repo.get(Trip, params.trip_id)
+    %{"user_id" => user_id, "trip_id" => trip_id} = params
+    trip = Repo.get(Trip, trip_id)
     trip_name = trip.name
     photo_url = trip.photo_url
 
     new_params = %{
-      "trip_id": params.trip_id,
-      "user_id": params.used_id,
+      "trip_id": trip_id,
+      "user_id": user_id,
       "trip_name": trip_name,
       "photo_url": photo_url
     }
