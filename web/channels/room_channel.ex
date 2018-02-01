@@ -3,12 +3,9 @@ defmodule PlanIt.RoomChannel do
   alias PlanIt.CardController
   alias PlanIt.CardUtil
 
-  def join("rooms:lobby", _message, socket) do
+  #Let them join any room
+  def join(room, _message, socket) do
     {:ok, socket}
-  end
-
-  def join(_room, _params, _socket) do
-    {:error, %{reason: "You can only join the lobby"}}
   end
 
   def handle_in("new:msg", body, socket) do
@@ -18,7 +15,6 @@ defmodule PlanIt.RoomChannel do
   end
 
   def handle_in("new:msg:cards", body, socket) do
-    IO.inspect("new message:cards")
     body = Map.get(body, "body")
     trip_id = Map.get(body, "tripId")
     cards = Map.get(body, "cards")
@@ -28,8 +24,7 @@ defmodule PlanIt.RoomChannel do
 
     #Scrub the ret package
     ret_package = Enum.map(ret_package, fn(c) ->
-      c
-      |> Map.drop([:__meta__, :__struct__, :trip])
+      Map.drop(c, [:__meta__, :__struct__, :trip])
     end)
 
     broadcast! socket, "new:msg:cards", %{cards: ret_package}
@@ -38,9 +33,7 @@ defmodule PlanIt.RoomChannel do
 
   def handle_in("new:user", body, socket) do
     IO.inspect("New user in")
-    IO.inspect(socket)
-    IO.inspect(body)
-    broadcast! socket, "new:user", body
+    broadcast! socket, "new:user:enter", body
     {:noreply, socket}
   end
 
