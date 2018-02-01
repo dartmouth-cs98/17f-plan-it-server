@@ -5,7 +5,6 @@ defmodule PlanIt.FavoritedTrip do
   alias PlanIt.Repo
   alias PlanIt.Trip
 
-
   import Ecto.Changeset
 
   @primary_key {:id, :id, autogenerate: true}
@@ -23,8 +22,6 @@ defmodule PlanIt.FavoritedTrip do
   def insert_favorited_trip(params) do
 
     # Insert into favorited_trip table
-    IO.inspect("params:")
-    IO.inspect(params)
     %{"user_id" => user_id, "trip_id" => trip_id} = params
     trip = Repo.get(Trip, trip_id)
     trip_name = trip.name
@@ -34,7 +31,8 @@ defmodule PlanIt.FavoritedTrip do
       "trip_id": trip_id,
       "user_id": user_id,
       "trip_name": trip_name,
-      "photo_url": photo_url
+      "photo_url": photo_url,
+      "last_visited": DateTime.utc_now
     }
     {message, changeset}  = Repo.insert(PlanIt.FavoritedTrip.changeset(%PlanIt.FavoritedTrip{}, new_params))
 
