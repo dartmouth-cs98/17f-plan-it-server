@@ -53,7 +53,7 @@ defmodule PlanIt.SuggestionsController do
     yelp_body = Poison.decode!(yelp_response.body)
     yelp_businesses = Map.get(yelp_body, "businesses")
 
-    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}&query=#{categories}"
+    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}&query=#{categories}&venuePhotos=1"
     foursquare_headers = []
     foursquare_response = HTTPoison.get!(foursquare_url, foursquare_headers)
     foursquare_businesses = Poison.decode!(foursquare_response.body)
@@ -62,7 +62,9 @@ defmodule PlanIt.SuggestionsController do
       json conn, "No places found near those coordinates."
     end
 
-    json conn, yelp_businesses + foursquare_businesses
+    formartted_yelp_business = Enum.map(yelp_businesses, fn(yelp_business) -> formatYelp(yelp_business) end)
+
+    json conn, [yelp_businesses, foursquare_businesses]
 
   end
 
@@ -76,7 +78,7 @@ defmodule PlanIt.SuggestionsController do
     yelp_body = Poison.decode!(yelp_response.body)
     yelp_businesses = Map.get(yelp_body, "businesses")
 
-    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}"
+    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}&venuePhotos=1"
     foursquare_headers = []
     foursquare_response = HTTPoison.get!(foursquare_url, foursquare_headers)
     foursquare_businesses = Poison.decode!(foursquare_response.body)
@@ -85,7 +87,67 @@ defmodule PlanIt.SuggestionsController do
       json conn, "No places found near those coordinates."
     end
 
-    json conn, [yelp_businesses, foursquare_businesses]
+    formatted_yelp_businesses = Enum.map(yelp_businesses, fn(yelp_business) -> formatYelp(yelp_business) end)
+
+    IO.inspect(foursquare_businesses["response"]["groups"])
+    # format1 = Enum.get()
+    # IO.inspect(format1)
+    formatted_foursquare_businesses = Enum.map(foursquare_businesses, fn(foursquare_business) -> formatFoursquare(foursquare_business) end)
+    # IO.inspect(formatted_yelp_businesses)
+
+    json conn, formatted_yelp_businesses
+
+    # //, foursquare_businesses
+
+  end
+
+  def formatYelp(suggestion) do
+
+    business = %{
+      name: suggestion["name"],
+      image_url: suggestion["image_url"],
+      url: suggestion["url"],
+      price: suggestion["price"],
+      lat: suggestion["coordinates"]["latitude"],
+      long: suggestion["coordinates"]["longitude"],
+      address: suggestion["location"]["address1"],
+      city: suggestion["location"]["city"],
+      state: suggestion["location"]["state"],
+      country: suggestion["location"]["country"],
+      zip_code: suggestion["location"]["zip_code"],
+      phone: suggestion["phone"],
+      display_phone: suggestion["display_phone"],
+
+      description: Map.get(suggestion, "categories") |> Enum.at(0) |> Map.get("title"),
+     
+      source: "yelp"
+    }
+
+  end
+
+  def formatFoursquare(suggestion) do
+
+    IO.inspect(suggestion)
+
+    business = %{
+      name: suggestion["venue"]["name"],
+      image_url: suggestion["image_url"],
+      url: suggestion["url"],
+      price: suggestion["price"],
+      lat: suggestion["coordinates"]["latitude"],
+      long: suggestion["coordinates"]["longitude"],
+      address: suggestion["location"]["address1"],
+      city: suggestion["location"]["city"],
+      state: suggestion["location"]["state"],
+      country: suggestion["location"]["country"],
+      zip_code: suggestion["location"]["zip_code"],
+      phone: suggestion["phone"],
+      display_phone: suggestion["display_phone"],
+
+      description: Map.get(suggestion, "categories") |> Enum.at(0) |> Map.get("title"),
+     
+      source: "yelp"
+    }
 
   end
 
