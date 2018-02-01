@@ -470,6 +470,9 @@ curl -X POST -d '{"user_id":4,"trip_id":1}' -H "Content-Type: application/json" 
 ### Create a trip 
 curl -X POST -d '{"name":"updated trip name","user_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v1/trips
 
+### Create a trip with a super long photourl
+curl -X POST -d '{"name":"trip with photo","user_id":1, "photo_url": "https://lh3.googleusercontent.com/nZBaAj4jTDga_lVcsJptWhC3GuWno5QwGIAy4_Misy3EfqPVLsa2Wul4_mz39V7mNNmsJMWv6yiDN0KZDE2N0mFnNqvxUWvVCet7J95BTbddnP7rB6tWcm_FtFxDWjNzdy1painImGuqgGLV82yMlCZMdieWSomkBYj6FeG-s3VkZIwjvoMd1GIRxRYhZE0NvADKMEpkwvGqBzgBxARvuVheiMsSbiZwyCLlNEzc0_Cz-78siJDVJkYyHOdjtV4RFKju_25niPqUbr9IMRYBv-CrAvWN5pb9QfRVLeIjmLIEJM4mz_xHUjKBh_HoG_qblQfEL16cpvghOOyaJJvnpACEfDHDLpiMyxdrZ3X0wJU2KHAQuXFFaqnikdVDDSuWy57jpy38fVfZaddhmEK1Q40xAPJ52gwx24UkCdZL9OW0EVvhYyFERExxAIm_d76Cf58clYr5766u1YdQThxcOlDZpCsdEErE8oKkgTZEUKUp297eXS3FEjp0IfJjWeZTFKPeG0UAZLQfxYrjFMeIdmw=w1470-h834-no"}' -H "Content-Type: application/json" http://localhost:4000/api/v1/trips
+
 ### Copy an existing trip
 curl -X POST -d '{"user_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v1/trips?original_id=1
 

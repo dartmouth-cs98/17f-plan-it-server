@@ -19,7 +19,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
     create table(:trip) do
       add :name, :string
       add :publish, :boolean
-      add :photo_url, :string
+      add :photo_url, :text
       add :upvotes, :integer, default: 0
       add :downvotes, :integer, default: 0
       add :start_time, :utc_datetime
@@ -43,7 +43,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       add :day_number, :integer
 
       add :description, :string
-      add :photo_url, :string
+      add :photo_url, :text
       add :url, :string
       add :place_id, :string
 
@@ -57,7 +57,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
 
     create table(:favorited_trip) do
       add :last_visited, :utc_datetime
-      add :trip_name, :string 
+      add :trip_name, :string
       add :user_id, references(:user)
       add :trip_id, references(:trip, on_delete: :delete_all)
 
