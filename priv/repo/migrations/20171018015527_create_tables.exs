@@ -58,7 +58,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
     create table(:favorited_trip) do
       add :last_visited, :utc_datetime
       add :trip_name, :string 
-      add :photo_url, :string
+      add :photo_url, :text
       add :user_id, references(:user)
       add :trip_id, references(:trip, on_delete: :delete_all)
 
