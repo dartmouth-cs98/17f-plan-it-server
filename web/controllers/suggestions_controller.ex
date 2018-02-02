@@ -62,7 +62,14 @@ defmodule PlanIt.SuggestionsController do
       json conn, "No places found near those coordinates."
     end
 
-    formartted_yelp_business = Enum.map(yelp_businesses, fn(yelp_business) -> formatYelp(yelp_business) end)
+    formatted_yelp_business = Enum.map(yelp_businesses, fn(yelp_business) -> formatYelp(yelp_business) end)
+
+    foursquare_parsed = foursquare_businesses["response"]["groups"] |> Enum.at(0) |> Map.get("items")
+    formatted_foursquare_businesses = Enum.map(foursquare_parsed, fn(suggestion) -> formatFoursquare(suggestion) end)
+
+    # Combine formatted yelp and foursquare businesses into one object to return 
+    # TO DO
+    # WORK IN OTHER FUNCTION FIRST
 
     json conn, [yelp_businesses, foursquare_businesses]
 
@@ -84,7 +91,7 @@ defmodule PlanIt.SuggestionsController do
     foursquare_businesses = Poison.decode!(foursquare_response.body)
 
     if yelp_businesses == [] or foursquare_businesses == "null" do
-      json conn, "No places found near those coordinates."
+      json conn, "No points of interest found near those coordinates."
     end
 
     formatted_yelp_businesses = Enum.map(yelp_businesses, fn(suggestion) -> formatYelp(suggestion) end)
@@ -93,7 +100,7 @@ defmodule PlanIt.SuggestionsController do
     formatted_foursquare_businesses = Enum.map(foursquare_parsed, fn(suggestion) -> formatFoursquare(suggestion) end)
 
     # Combine formatted yelp and foursquare businesses into one object to return 
-    ###
+    # TO DO
 
     json conn, formatted_foursquare_businesses
 
@@ -123,8 +130,8 @@ defmodule PlanIt.SuggestionsController do
   def formatFoursquare(suggestion) do
 
     s = suggestion["venue"]
-    base_url = "www.foursquare.com/v/"
 
+    # Check for nil in long pipe; might raise an error otherwise
     if not is_map(Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0)) do
       image_url = nil
     else
@@ -137,7 +144,7 @@ defmodule PlanIt.SuggestionsController do
     business = %{
       name: s["name"],
       image_url: image_url,
-      url: base_url <> s["id"],
+      url: "www.foursquare.com/v/" <> s["id"],
       price: s["price"]["currency"],
       lat: s["location"]["lat"],
       long: s["location"]["lat"],
