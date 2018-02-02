@@ -102,6 +102,8 @@ defmodule PlanIt.SuggestionsController do
     # Combine formatted yelp and foursquare businesses into one object to return 
     # TO DO
 
+    IO.inspect(formatted_yelp_businesses)
+
     json conn, formatted_foursquare_businesses
 
   end
@@ -113,6 +115,7 @@ defmodule PlanIt.SuggestionsController do
       image_url: s["image_url"],
       url: s["url"],
       price: s["price"],
+      rating: "#{s["rating"]}" <> "/5",
       lat: s["coordinates"]["latitude"],
       long: s["coordinates"]["longitude"],
       address: s["location"]["address1"],
@@ -122,7 +125,7 @@ defmodule PlanIt.SuggestionsController do
       zip_code: s["location"]["zip_code"],
       phone: s["phone"],
       description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("title"),
-      source: "yelp"
+      source: "Yelp"
     }
 
   end
@@ -146,6 +149,7 @@ defmodule PlanIt.SuggestionsController do
       image_url: image_url,
       url: "www.foursquare.com/v/" <> s["id"],
       price: s["price"]["currency"],
+      rating: "#{s["rating"]}" <> "/10",
       lat: s["location"]["lat"],
       long: s["location"]["lat"],
       address: s["location"]["address"],
@@ -155,7 +159,7 @@ defmodule PlanIt.SuggestionsController do
       zip_code: s["location"]["postalCode"],
       phone: s["contact"]["phone"],
       description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("shortName"),
-      source: "foursquare"
+      source: "Foursquare"
     }
 
   end
