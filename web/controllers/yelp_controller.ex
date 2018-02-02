@@ -20,7 +20,8 @@ defmodule PlanIt.YelpController do
 
     db_token = Repo.one(from t in Token,
       where: t.service == "yelp",
-      select: t
+      select: t,
+      limit: 1
     )
 
     if db_token  == nil do
