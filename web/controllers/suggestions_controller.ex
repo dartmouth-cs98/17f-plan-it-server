@@ -53,7 +53,9 @@ defmodule PlanIt.SuggestionsController do
     yelp_body = Poison.decode!(yelp_response.body)
     yelp_businesses = Map.get(yelp_body, "businesses")
 
-    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}&query=#{categories}&venuePhotos=1"
+    client_id = "NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF"
+    client_secret = "KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT"
+    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=#{client_id}&client_secret=#{client_secret}&v=2220170801&ll=#{lat},#{long}&query=#{categories}&venuePhotos=1"
     foursquare_headers = []
     foursquare_response = HTTPoison.get!(foursquare_url, foursquare_headers)
     foursquare_businesses = Poison.decode!(foursquare_response.body)
@@ -63,12 +65,10 @@ defmodule PlanIt.SuggestionsController do
     end
 
     formatted_yelp_business = Enum.map(yelp_businesses, fn(yelp_business) -> formatYelp(yelp_business) end)
-
     foursquare_parsed = foursquare_businesses["response"]["groups"] |> Enum.at(0) |> Map.get("items")
     formatted_foursquare_businesses = Enum.map(foursquare_parsed, fn(suggestion) -> formatFoursquare(suggestion) end)
 
     # Combine formatted yelp and foursquare businesses into one object to return 
-    # TO DO
     # WORK IN OTHER FUNCTION FIRST
 
     json conn, [yelp_businesses, foursquare_businesses]
@@ -78,14 +78,16 @@ defmodule PlanIt.SuggestionsController do
   def topplaces(conn, %{"latitude" => lat, "longitude" => long} = params) do
 
     yelp_token = get_token()
-
     yelp_url = "https://api.yelp.com/v3/businesses/search?latitude=#{lat}&longitude=#{long}"
     yelp_headers = ["Authorization": "#{yelp_token.token_type} #{yelp_token.access_token}"]
     yelp_response = HTTPoison.get!(yelp_url, yelp_headers)
     yelp_body = Poison.decode!(yelp_response.body)
     yelp_businesses = Map.get(yelp_body, "businesses")
 
-    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF&client_secret=KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT&v=2220170801&ll=#{lat},#{long}&venuePhotos=1"
+    client_id = "NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF"
+    client_secret = "KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT"
+
+    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=#{client_id}&client_secret=#{client_secret}&v=2220170801&ll=#{lat},#{long}&venuePhotos=1"
     foursquare_headers = []
     foursquare_response = HTTPoison.get!(foursquare_url, foursquare_headers)
     foursquare_businesses = Poison.decode!(foursquare_response.body)
@@ -95,16 +97,17 @@ defmodule PlanIt.SuggestionsController do
     end
 
     formatted_yelp_businesses = Enum.map(yelp_businesses, fn(suggestion) -> formatYelp(suggestion) end)
-
     foursquare_parsed = foursquare_businesses["response"]["groups"] |> Enum.at(0) |> Map.get("items")
     formatted_foursquare_businesses = Enum.map(foursquare_parsed, fn(suggestion) -> formatFoursquare(suggestion) end)
 
     # Combine formatted yelp and foursquare businesses into one object to return 
-    # TO DO
+    yelp_names = Enum.map(yelp_businesses, fn(suggestion) -> suggestion["name"] end)
+    foursquare_names = Enum.map(foursquare_parsed, fn(suggestion) -> suggestion["venue"]["name"] end)
 
-    IO.inspect(formatted_yelp_businesses)
+    IO.inspect(yelp_names)
+    IO.inspect(foursquare_names)
 
-    json conn, formatted_foursquare_businesses
+    json conn, [formatted_yelp_businesses, formatted_foursquare_businesses]
 
   end
 
@@ -151,7 +154,7 @@ defmodule PlanIt.SuggestionsController do
       price: s["price"]["currency"],
       rating: "#{s["rating"]}" <> "/10",
       lat: s["location"]["lat"],
-      long: s["location"]["lat"],
+      long: s["location"]["lng"],
       address: s["location"]["address"],
       city: s["location"]["city"],
       state: s["location"]["state"],
