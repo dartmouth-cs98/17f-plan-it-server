@@ -87,39 +87,34 @@ defmodule PlanIt.SuggestionsController do
       json conn, "No places found near those coordinates."
     end
 
-    formatted_yelp_businesses = Enum.map(yelp_businesses, fn(yelp_business) -> formatYelp(yelp_business) end)
+    formatted_yelp_businesses = Enum.map(yelp_businesses, fn(suggestion) -> formatYelp(suggestion) end)
 
-    IO.inspect(foursquare_businesses["response"]["groups"])
-    # format1 = Enum.get()
-    # IO.inspect(format1)
-    formatted_foursquare_businesses = Enum.map(foursquare_businesses, fn(foursquare_business) -> formatFoursquare(foursquare_business) end)
-    # IO.inspect(formatted_yelp_businesses)
+    foursquare_parsed = foursquare_businesses["response"]["groups"] |> Enum.at(0) |> Map.get("items")
+    formatted_foursquare_businesses = Enum.map(foursquare_parsed, fn(suggestion) -> formatFoursquare(suggestion) end)
 
-    json conn, formatted_yelp_businesses
+    # Combine formatted yelp and foursquare businesses into one object to return 
+    ###
 
-    # //, foursquare_businesses
+    json conn, formatted_foursquare_businesses
 
   end
 
-  def formatYelp(suggestion) do
+  def formatYelp(s) do
 
     business = %{
-      name: suggestion["name"],
-      image_url: suggestion["image_url"],
-      url: suggestion["url"],
-      price: suggestion["price"],
-      lat: suggestion["coordinates"]["latitude"],
-      long: suggestion["coordinates"]["longitude"],
-      address: suggestion["location"]["address1"],
-      city: suggestion["location"]["city"],
-      state: suggestion["location"]["state"],
-      country: suggestion["location"]["country"],
-      zip_code: suggestion["location"]["zip_code"],
-      phone: suggestion["phone"],
-      display_phone: suggestion["display_phone"],
-
-      description: Map.get(suggestion, "categories") |> Enum.at(0) |> Map.get("title"),
-     
+      name: s["name"],
+      image_url: s["image_url"],
+      url: s["url"],
+      price: s["price"],
+      lat: s["coordinates"]["latitude"],
+      long: s["coordinates"]["longitude"],
+      address: s["location"]["address1"],
+      city: s["location"]["city"],
+      state: s["location"]["state"],
+      country: s["location"]["country"],
+      zip_code: s["location"]["zip_code"],
+      phone: s["phone"],
+      description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("title"),
       source: "yelp"
     }
 
@@ -127,26 +122,25 @@ defmodule PlanIt.SuggestionsController do
 
   def formatFoursquare(suggestion) do
 
-    IO.inspect(suggestion)
+    s = suggestion["venue"]
+
+    IO.inspect(s)
 
     business = %{
-      name: suggestion["venue"]["name"],
-      image_url: suggestion["image_url"],
-      url: suggestion["url"],
-      price: suggestion["price"],
-      lat: suggestion["coordinates"]["latitude"],
-      long: suggestion["coordinates"]["longitude"],
-      address: suggestion["location"]["address1"],
-      city: suggestion["location"]["city"],
-      state: suggestion["location"]["state"],
-      country: suggestion["location"]["country"],
-      zip_code: suggestion["location"]["zip_code"],
-      phone: suggestion["phone"],
-      display_phone: suggestion["display_phone"],
-
-      description: Map.get(suggestion, "categories") |> Enum.at(0) |> Map.get("title"),
-     
-      source: "yelp"
+      name: s["name"],
+      # image_url: suggestion["image_url"],
+      # url: suggestion["url"],
+      price: s["price"]["currency"],
+      lat: s["location"]["lat"],
+      long: s["location"]["lat"],
+      address: s["location"]["address"],
+      city: s["location"]["city"],
+      state: s["location"]["state"],
+      country: s["location"]["country"],
+      zip_code: s["location"]["postalCode"],
+      phone: s["contact"]["phone"],
+      description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("shortName"),
+      source: "foursquare"
     }
 
   end
