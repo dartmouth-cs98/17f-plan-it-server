@@ -5,7 +5,6 @@ defmodule PlanIt.FavoritedTrip do
   alias PlanIt.Repo
   alias PlanIt.Trip
 
-
   import Ecto.Changeset
 
   @primary_key {:id, :id, autogenerate: true}
@@ -15,13 +14,29 @@ defmodule PlanIt.FavoritedTrip do
 
     field :last_visited, :utc_datetime
     field :trip_name, :string
+    field :photo_url, :string
 
     timestamps()
   end
 
   def insert_favorited_trip(params) do
 
-    {message, changeset}  = Repo.insert(PlanIt.FavoritedTrip.changeset(%PlanIt.FavoritedTrip{}, params))
+    # Insert into favorited_trip table
+    %{"user_id" => user_id, "trip_id" => trip_id} = params
+    trip = Repo.get(Trip, trip_id)
+    trip_name = trip.name
+    photo_url = trip.photo_url
+
+    new_params = %{
+      "trip_id": trip_id,
+      "user_id": user_id,
+      "trip_name": trip_name,
+      "photo_url": photo_url,
+      "last_visited": DateTime.utc_now
+    }
+    {message, changeset}  = Repo.insert(PlanIt.FavoritedTrip.changeset(%PlanIt.FavoritedTrip{}, new_params))
+
+    # Call upvote_trip to automatically upvote upon favoriting
     message2 = PlanIt.FavoritedTrip.upvote_trip(changeset)
     case {message, message2} do
       {:ok, :ok} -> {:ok, changeset}
@@ -46,6 +61,8 @@ defmodule PlanIt.FavoritedTrip do
   end
 
   def changeset(favorited_trip, params) do
-    favorited_trip |> cast(params, [:user_id, :trip_id, :last_visited, :trip_name])
+    favorited_trip 
+      |> cast(params, [:user_id, :trip_id, :last_visited, :trip_name, :photo_url])
+      |> unique_constraint(:uniqueindex, name: :unique_favorited_trip)
   end
 end

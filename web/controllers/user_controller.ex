@@ -170,4 +170,5 @@ defmodule PlanIt.UserController do
 
     json conn, []
   end
+
 end
