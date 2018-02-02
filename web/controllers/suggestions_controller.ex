@@ -123,13 +123,21 @@ defmodule PlanIt.SuggestionsController do
   def formatFoursquare(suggestion) do
 
     s = suggestion["venue"]
+    base_url = "www.foursquare.com/v/"
 
-    IO.inspect(s)
+    if not is_map(Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0)) do
+      image_url = nil
+    else
+      prefix = Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0) |> Map.get("items") |> Enum.at(0) |> Map.get("prefix")
+      suffix = Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0) |> Map.get("items") |> Enum.at(0) |> Map.get("suffix")
+      photo_size = "original"
+      image_url = prefix <> photo_size <> suffix
+    end
 
     business = %{
       name: s["name"],
-      # image_url: suggestion["image_url"],
-      # url: suggestion["url"],
+      image_url: image_url,
+      url: base_url <> s["id"],
       price: s["price"]["currency"],
       lat: s["location"]["lat"],
       long: s["location"]["lat"],
