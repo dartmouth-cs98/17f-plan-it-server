@@ -41,6 +41,9 @@ defmodule PlanIt.Router do
 
     resources "/published", PublishedTripController, only: [:index]
 
+    resources "/viewed", ViewedTripController, only: [:index, :create]
+    put "/viewed", ViewedTripController, :change
+
     get "/yelp", YelpController, :topplaces
     get "/foursquare", FoursquareController, :topplaces
   end
