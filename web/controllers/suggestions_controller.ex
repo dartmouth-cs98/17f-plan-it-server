@@ -68,11 +68,14 @@ defmodule PlanIt.SuggestionsController do
     foursquare_parsed = foursquare_businesses["response"]["groups"] |> Enum.at(0) |> Map.get("items")
     formatted_foursquare_businesses = Enum.map(foursquare_parsed, fn(suggestion) -> formatFoursquare(suggestion) end)
 
-    # Combine formatted yelp and foursquare businesses into one object to return 
-    # WORK IN OTHER FUNCTION FIRST
 
-    json conn, [yelp_businesses, foursquare_businesses]
+    # concat yelp and foursquare
+    yelp_and_foursquare = formatted_yelp_businesses ++ formatted_foursquare_businesses
 
+    # put the formatted suggestions in a dictionary, removing duplicates; latest one prevails
+    phone_number_dict = Map.new(yelp_and_foursquare, fn(suggestion) -> {suggestion.phone, suggestion} end)
+
+    json conn, Map.values(phone_number_dict)
   end
 
   def topplaces(conn, %{"latitude" => lat, "longitude" => long} = params) do
