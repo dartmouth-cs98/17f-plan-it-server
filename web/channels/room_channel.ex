@@ -1,11 +1,23 @@
 defmodule PlanIt.RoomChannel do
   use Phoenix.Channel
+
+  import Ecto.Query
   alias PlanIt.CardController
   alias PlanIt.CardUtil
+  alias PlanIt.Repo
+  alias PlanIt.User
 
   #Let them join any room
-  def join(room, _message, socket) do
-    {:ok, socket}
+  def join(room, message, socket) do
+
+    #need to handle the case where the email is not present.
+    #annon sockets
+    email = Map.get(message, "email")
+    user = (from u in User,
+      where: u.email == ^email,
+      select: u ) |> Repo.one
+
+    {:ok, assign(socket, :user_id, user.id)}
   end
 
   def handle_in("new:msg", body, socket) do
@@ -15,12 +27,9 @@ defmodule PlanIt.RoomChannel do
   end
 
   def handle_in("new:msg:cards", body, socket) do
-    body = Map.get(body, "body")
-    trip_id = Map.get(body, "tripId")
-    cards = Map.get(body, "cards")
 
-    #CardUtil.create_update_helper(Map.get(body, "tripId"), Map.get(body, "cards"))
-    {message, ret_package} = CardUtil.create_update_helper(trip_id, cards)
+    body = Map.get(body, "body")
+    {message, ret_package} = CardUtil.create_update_helper(Map.get(body, "tripId"), Map.get(body, "cards"))
 
     #Scrub the ret package
     ret_package = Enum.map(ret_package, fn(c) ->
@@ -31,11 +40,31 @@ defmodule PlanIt.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("new:user", body, socket) do
+  def handle_in("new:user:enter", body, socket) do
     IO.inspect("New user in")
     broadcast! socket, "new:user:enter", body
     {:noreply, socket}
   end
 
+  def handle_in("new:user:exit", body, socket) do
+    IO.inspect("User left")
+    broadcast! socket, "new:user:exit", body
+    {:noreply, socket}
+  end
+
+  #heartbeat
+  def handle_in("new:user:heartbeat", body, socket) do
+    IO.inspect("Heartbeat received")
+    IO.inspect(body)
+    IO.inspect(socket)
+
+    broadcast! socket, "new:user:heartbeat", socket.assigns
+    {:noreply, socket}
+  end
+
+  def handle_in(msg, body, socket) do
+    IO.inspect("Catch all")
+    {:noreply, socket}
+   end
 
 end
