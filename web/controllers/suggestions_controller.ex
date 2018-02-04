@@ -60,14 +60,13 @@ defmodule PlanIt.SuggestionsController do
     foursquare_response = HTTPoison.get!(foursquare_url, foursquare_headers)
     foursquare_businesses = Poison.decode!(foursquare_response.body)
 
-    if yelp_businesses == [] or foursquare_businesses == "null" do
+    if yelp_businesses == [] and foursquare_businesses == nil do
       json conn, "No places found near those coordinates."
     end
 
-    formatted_yelp_business = Enum.map(yelp_businesses, fn(yelp_business) -> formatYelp(yelp_business) end)
+    formatted_yelp_businesses = Enum.map(yelp_businesses, fn(yelp_business) -> formatYelp(yelp_business) end)
     foursquare_parsed = foursquare_businesses["response"]["groups"] |> Enum.at(0) |> Map.get("items")
     formatted_foursquare_businesses = Enum.map(foursquare_parsed, fn(suggestion) -> formatFoursquare(suggestion) end)
-
 
     # concat yelp and foursquare
     yelp_and_foursquare = formatted_yelp_businesses ++ formatted_foursquare_businesses
