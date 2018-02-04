@@ -35,15 +35,16 @@ defmodule PlanIt.Router do
     resources "/permissions", EditPermissionController, only: [:index, :create]
     delete "/permissions", EditPermissionController, :remove
 
-    resources "/favorited", FavoritedTripController, only: [:index, :create, :update]
+    resources "/favorited", FavoritedTripController, only: [:index, :create]
     delete "/favorited", FavoritedTripController, :remove
 
     resources "/published", PublishedTripController, only: [:index]
 
-    resources "/viewed", ViewedTripController, only: [:index, :create, :update]
+    resources "/viewed", ViewedTripController, only: [:index, :create]
 
     get "/yelp", YelpController, :topplaces
     get "/foursquare", FoursquareController, :topplaces
+    
   end
 
 end
