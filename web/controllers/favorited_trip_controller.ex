@@ -42,22 +42,34 @@ defmodule PlanIt.FavoritedTripController do
   end
 
   # PUT - update an existing favorited trip
-  def change(conn, %{"user_id" => user_id, "trip_id" => trip_id} = params) do
-    favorited_trip = (from t in FavoritedTrip,
-      where: t.user_id == ^user_id and t.trip_id == ^trip_id,
-      select: t
-    ) |> Repo.one
+  def change(conn, %{"id" => user_id} = params) do
 
-    changeset = FavoritedTrip.changeset(favorited_trip, params)
+    trip_id = Map.get(params, "trip_id")
+    last_visited = Map.get(params, "last_visited")
 
-    {message, changeset} = Repo.update(changeset)
+    if last_visited == nil do
+      json put_status(conn, 400), "last_visited can't be undefined"
+    else 
+      new_params = %{
+        "last_visited": last_visited
+      }
 
-    if message == :error do
-      error = "error: #{inspect changeset.errors}"
-      json put_status(conn, 400), error
+      favorited_trip = (from t in FavoritedTrip,
+        where: t.user_id == ^user_id and t.trip_id == ^trip_id,
+        select: t
+      ) |> Repo.one
+
+      changeset = FavroitedTrip.changeset(favorited_trip, new_params)
+
+      {message, changeset} = Repo.update(changeset)
+
+      if message == :error do
+        error = "error: #{inspect changeset.errors}"
+        json put_status(conn, 400), error
+      end
+
+      json conn, "ok"
     end
-
-    json conn, "ok"
   end
 
   # DELETE - delete a favorited trip by user id and trip id

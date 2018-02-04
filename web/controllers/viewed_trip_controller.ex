@@ -41,25 +41,34 @@ defmodule PlanIt.ViewedTripController do
   end
 
   # PUT - update an existing viewed trip
-  def change(conn, %{"user_id" => user_id, "trip_id" => trip_id} = params) do
+  def update(conn, %{"id" => user_id} = params) do
 
-    IO.inspect(params)
+    trip_id = Map.get(params, "trip_id")
+    last_visited = Map.get(params, "last_visited")
 
-    viewed_trip = (from t in ViewedTrip,
-      where: t.user_id == ^user_id and t.trip_id == ^trip_id,
-      select: t
-    ) |> Repo.one
+    if last_visited == nil do
+      json put_status(conn, 400), "last_visited can't be undefined"
+    else 
+      new_params = %{
+        "last_visited": last_visited
+      }
 
-    changeset = ViewedTrip.changeset(viewed_trip, params)
+      viewed_trip = (from t in ViewedTrip,
+        where: t.user_id == ^user_id and t.trip_id == ^trip_id,
+        select: t
+      ) |> Repo.one
 
-    {message, changeset} = Repo.update(changeset)
+      changeset = ViewedTrip.changeset(viewed_trip, new_params)
 
-    if message == :error do
-      error = "error: #{inspect changeset.errors}"
-      json put_status(conn, 400), error
+      {message, changeset} = Repo.update(changeset)
+
+      if message == :error do
+        error = "error: #{inspect changeset.errors}"
+        json put_status(conn, 400), error
+      end
+
+      json conn, "ok"
     end
-
-    json conn, "ok"
   end
 
 end
