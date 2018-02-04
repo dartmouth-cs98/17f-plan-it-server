@@ -100,16 +100,16 @@ defmodule PlanIt.SuggestionsController do
     foursquare_parsed = foursquare_businesses["response"]["groups"] |> Enum.at(0) |> Map.get("items")
     formatted_foursquare_businesses = Enum.map(foursquare_parsed, fn(suggestion) -> formatFoursquare(suggestion) end)
 
-    # Combine formatted yelp and foursquare businesses into one object to return 
-    yelp_names = Enum.map(yelp_businesses, fn(suggestion) -> suggestion["name"] end)
-    foursquare_names = Enum.map(foursquare_parsed, fn(suggestion) -> suggestion["venue"]["name"] end)
+    # concat yelp and foursquare
+    yelp_and_foursquare = formatted_yelp_businesses ++ formatted_foursquare_businesses
 
-    IO.inspect(yelp_names)
-    IO.inspect(foursquare_names)
+    # put the formatted suggestions in a dictionary, removing duplicates; latest one prevails
+    phone_number_dict = Map.new(yelp_and_foursquare, fn(suggestion) -> {suggestion.phone, suggestion} end)
 
-    json conn, [formatted_yelp_businesses, formatted_foursquare_businesses]
+    json conn, Map.values(phone_number_dict)
 
   end
+
 
   def formatYelp(s) do
 
@@ -126,7 +126,7 @@ defmodule PlanIt.SuggestionsController do
       state: s["location"]["state"],
       country: s["location"]["country"],
       zip_code: s["location"]["zip_code"],
-      phone: s["phone"],
+      phone: take_countrycode(s["phone"], "+1"),
       description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("title"),
       source: "Yelp"
     }
@@ -167,4 +167,14 @@ defmodule PlanIt.SuggestionsController do
 
   end
 
+  def take_countrycode(phone_number, country_code) do
+
+    if phone_number != nil do
+
+      base = String.length(country_code)
+      String.slice(phone_number, base, String.length(phone_number) - base)
+    else
+      phone_number
+    end
+  end
 end
