@@ -92,7 +92,7 @@ defmodule PlanIt.SuggestionsController do
     foursquare_response = HTTPoison.get!(foursquare_url, foursquare_headers)
     foursquare_businesses = Poison.decode!(foursquare_response.body)
 
-    if yelp_businesses == [] or foursquare_businesses == "null" do
+    if yelp_businesses == [] and foursquare_businesses == nil do
       json conn, "No points of interest found near those coordinates."
     end
 
