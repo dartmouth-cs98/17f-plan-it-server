@@ -220,13 +220,16 @@ Returns 400 and an error message if the upvote/downvote is not successful.
 
 /api/v1/published?order=trending
 
+/api/v1/published?order=user_recent&user_id=:user_id
+
 /api/v1/published
 ```
 
-Popular - returns a list of published trips ordered by number of upvotes.
-Publish_date - returns a list of published trips ordered by the date the trip itself was created.
-Trending - returns a list of published trips ordered by the most recent favorited trips.
-No param - returns a list of published trips in no particular order.
+Popular - returns a list of published trips ordered by number of upvotes.  
+Publish_date - returns a list of published trips ordered by the date the trip itself was created.  
+Trending - returns a list of published trips ordered by the most recent favorited trips. 
+User_recent -  returns a list of published trips in order of most recently viewed by a particular user.  
+No param - returns a list of published trips in no particular order.  
 
 Returns 400 and an error message if invalid parameters are used.
 
