@@ -12,7 +12,7 @@ defmodule PlanIt.PublishedTripController do
   def index(conn, %{"order" => order, "user_id" => user_id} = params) do
   	
   	if order != "user_recent" do
-  		json put_status(conn, 400), "invalid ordering provided"
+  		json put_status(conn, 400), "Invalid ordering provided. Only 'user_recent' may be used if a user_id is provided."
 
   	else 
   		trips = (from vt in PlanIt.ViewedTrip,
@@ -31,7 +31,8 @@ defmodule PlanIt.PublishedTripController do
 				last_visited: vt.last_visited,
 				inserted_at: vt.inserted_at,
 				updated_at: vt.updated_at},
-			order_by: [desc: :last_visited]
+			order_by: [desc: :last_visited],
+			limit: 20
 		) |> Repo.all
 
 		json conn, trips
@@ -44,20 +45,22 @@ defmodule PlanIt.PublishedTripController do
     trips = 
 	    case order do
 	        nil ->
-	      		json put_status(conn, 400), "no ordering provided"
+	      		json put_status(conn, 400), "No ordering provided"
 
 	        "popular" ->
 		    	(from t in PlanIt.Trip,
 			        where: t.publish == true,
 			        select: t,
-			        order_by: [desc: :upvotes]
+			        order_by: [desc: :upvotes],
+			        limit: 20
 		    	) |> Repo.all
 
 	        "publish_date" ->
 		       (from t in PlanIt.Trip,
 		       		where: t.publish == true,
 		        	select: t,
-		         	order_by: [desc: :inserted_at]
+		         	order_by: [desc: :inserted_at],
+		         	limit: 20
 		        ) |> Repo.all
 
 	        "trending" ->
@@ -77,7 +80,8 @@ defmodule PlanIt.PublishedTripController do
                         last_visited: ft.last_visited,
                         inserted_at: ft.inserted_at,
                         updated_at: ft.updated_at},
-                	order_by: [desc: :inserted_at]
+                	order_by: [desc: :inserted_at],
+                	limit: 20
 		        ) |> Repo.all
 
 	        _ ->
@@ -93,7 +97,8 @@ defmodule PlanIt.PublishedTripController do
 
     trips = (from t in PlanIt.Trip,
 		        where: t.publish == true,
-		        select: t
+		        select: t,
+		        limit: 20
 		      ) |> Repo.all
 
     json conn, trips

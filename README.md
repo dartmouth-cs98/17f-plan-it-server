@@ -231,6 +231,8 @@ Trending - returns a list of published trips ordered by the most recent favorite
 User_recent -  returns a list of published trips in order of most recently viewed by a particular user.  
 No param - returns a list of published trips in no particular order.  
 
+Up to 20 trips are returned for each endpoint.
+
 Returns 400 and an error message if invalid parameters are used.
 
 ## Favorited trips
