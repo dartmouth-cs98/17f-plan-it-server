@@ -55,7 +55,7 @@ defmodule PlanIt.SuggestionsController do
 
     client_id = "NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF"
     client_secret = "KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT"
-    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=#{client_id}&client_secret=#{client_secret}&v=2220170801&ll=#{lat},#{long}&query=#{categories}&venuePhotos=1"
+    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=#{client_id}&client_secret=#{client_secret}&v=2220170801&ll=#{lat},#{long}&query=#{categories}&venuePhotos=1&limit=15"
     foursquare_headers = []
     foursquare_response = HTTPoison.get!(foursquare_url, foursquare_headers)
     foursquare_businesses = Poison.decode!(foursquare_response.body)
@@ -89,7 +89,7 @@ defmodule PlanIt.SuggestionsController do
     client_id = "NKGVGUKE0KSZBAQC2M0MYIX1U0MSU31VSTNTWYPGJ4VW0TQF"
     client_secret = "KVZEVGPA3T4523RGDNX32UH1Y33OXZHJYCWPULNES1VIPUWT"
 
-    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=#{client_id}&client_secret=#{client_secret}&v=2220170801&ll=#{lat},#{long}&venuePhotos=1"
+    foursquare_url = "https://api.foursquare.com/v2/venues/explore?client_id=#{client_id}&client_secret=#{client_secret}&v=2220170801&ll=#{lat},#{long}&venuePhotos=1&limit=15"
     foursquare_headers = []
     foursquare_response = HTTPoison.get!(foursquare_url, foursquare_headers)
     foursquare_businesses = Poison.decode!(foursquare_response.body)
