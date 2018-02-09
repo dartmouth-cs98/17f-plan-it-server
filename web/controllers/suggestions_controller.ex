@@ -20,6 +20,7 @@ defmodule PlanIt.SuggestionsController do
 
     db_token = Repo.one(from t in Token,
       where: t.service == "yelp",
+      limit: 1, 
       select: t
     )
 
