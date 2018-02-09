@@ -1,6 +1,7 @@
 defmodule PlanIt.CardController do
   alias PlanIt.Repo
   alias PlanIt.Card
+  alias PlanIt.CardUtil
 
   import Ecto.Query
   import Ecto.Changeset
@@ -45,62 +46,15 @@ defmodule PlanIt.CardController do
 
   #POST update/create with a list of cards
   ## the new card will have an ID of 0
-  def create(conn, %{"trip_id" => trip_id, "_json" => cards} = params) do
-    new_card = Enum.find(cards, fn(c) -> Map.get(c, "id") == 0 end)
-    if new_card != nil do
-      {status, new_card_changeset} = Repo.insert(Card.changeset(%Card{}, new_card))
-
-      if status == :error do
-        error = "error: #{inspect new_card_changeset.errors}"
-        json put_status(conn, 400), error
-      end
-    end
-
-    existing_cards = Enum.filter(cards, fn(c) -> Map.get(c, "id") != 0 end)
-
-    repo_messages = Enum.map(existing_cards, fn(c) ->
-      card_params = Enum.find(cards, fn(cc) -> Map.get(cc, "id") == Map.get(c, "id") end)
-
-      current_card = Repo.get(Card, Map.get(c, "id"))
-
-      if current_card != nil do
-        current_card
-        |> Card.changeset(card_params)
-        |> Card.changeset(params)
-        |> Repo.update()
-      else
-        "Card id: #{Map.get(c, "id")} was not found in database"
-      end
-    end)
-
-    changesets_errors = Enum.map(repo_messages, fn(c) ->
-      case c do
-        {:ok, changeset} -> changeset
-        {:error, message} -> message
-        _ -> c
-      end
-    end)
-
-    return_package = if new_card_changeset do
-      changesets_errors ++ [new_card_changeset]
+  def create(conn, %{"trip_id" => trip_id, "_json" => cards}) do
+    {message, package} = CardUtil.create_update_helper(trip_id, cards)
+    if message == :error do
+      json put_status(conn, 400), package
     else
-      changesets_errors
+      json conn, package
     end
-
-    return_package = Enum.sort(return_package, fn(a, b) ->
-      cond do
-        is_binary(a) ->
-          false
-        is_binary(b) ->
-          true
-        true ->
-          IO.inspect(a.start_time)
-          a.start_time <= b.start_time
-      end
-    end)
-
-    json conn, return_package
   end
+
 
   # POST - insert new cards
   def create(conn, %{"_json" => cards } = params) do

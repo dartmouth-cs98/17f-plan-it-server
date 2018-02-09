@@ -2,7 +2,7 @@ defmodule PlanIt.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", PlanIt.RoomChannel
+  channel "rooms:*", PlanIt.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
