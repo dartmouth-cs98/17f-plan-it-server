@@ -173,8 +173,8 @@ defmodule PlanIt.SuggestionsController do
 
   def take_countrycode(phone_number) do
 
-    if phone_number != "" and String.length(phone_number) >= 10 do
-      String.slice(phone_number, String.length(phone_number)-10.. -1)
+    if phone_number != "" and phone_number != nil and String.length(phone_number) >= 10 do
+      String.slice(phone_number, String.length(phone_number)-10..-1)
     else
       phone_number
     end
