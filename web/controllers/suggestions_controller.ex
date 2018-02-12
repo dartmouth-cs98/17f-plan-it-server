@@ -109,9 +109,7 @@ defmodule PlanIt.SuggestionsController do
     # put the formatted suggestions in a dictionary, removing duplicates; latest one prevails
     phone_number_dict = Map.new(yelp_and_foursquare, fn(suggestion) -> {suggestion.phone, suggestion} end)
 
-    #json conn, Map.values(phone_number_dict)
-
-    json conn, formatted_yelp_businesses
+    json conn, Map.values(phone_number_dict)
   end
 
 
