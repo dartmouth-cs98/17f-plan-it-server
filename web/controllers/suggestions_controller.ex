@@ -109,8 +109,9 @@ defmodule PlanIt.SuggestionsController do
     # put the formatted suggestions in a dictionary, removing duplicates; latest one prevails
     phone_number_dict = Map.new(yelp_and_foursquare, fn(suggestion) -> {suggestion.phone, suggestion} end)
 
-    json conn, Map.values(phone_number_dict)
+    #json conn, Map.values(phone_number_dict)
 
+    json conn, formatted_yelp_businesses
   end
 
 
@@ -163,7 +164,7 @@ defmodule PlanIt.SuggestionsController do
       state: s["location"]["state"],
       country: s["location"]["country"],
       zip_code: s["location"]["postalCode"],
-      phone: s["contact"]["phone"],
+      phone: take_countrycode(s["contact"]["phone"], "+1"),
       description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("shortName"),
       source: "Foursquare"
     }
@@ -172,10 +173,8 @@ defmodule PlanIt.SuggestionsController do
 
   def take_countrycode(phone_number, country_code) do
 
-    if phone_number != "" and phone_number != nil do
-
-      base = String.length(country_code)
-      String.slice(phone_number, base, String.length(phone_number) - base)
+    if phone_number != "" and String.length(phone_number) >= 10 do
+      String.slice(phone_number, String.length(phone_number)-10.. -1)
     else
       phone_number
     end
