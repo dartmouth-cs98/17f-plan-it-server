@@ -67,6 +67,18 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
 
     create unique_index(:favorited_trip, [:user_id, :trip_id], name: :unique_favorited_trip)
 
+    create table(:viewed_trip) do
+      add :last_visited, :utc_datetime
+      add :trip_name, :string 
+      add :photo_url, :text
+      add :user_id, references(:user)
+      add :trip_id, references(:trip, on_delete: :delete_all)
+
+      timestamps()
+    end
+
+    create unique_index(:viewed_trip, [:user_id, :trip_id], name: :unique_viewed_trip)
+
     create table(:edit_permission) do
       add :user_id, references(:user)
       add :trip_id, references(:trip, on_delete: :delete_all)
