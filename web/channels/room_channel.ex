@@ -17,7 +17,12 @@ defmodule PlanIt.RoomChannel do
       where: u.email == ^email,
       select: u ) |> Repo.one
 
-    {:ok, assign(socket, :user_id, user.id)}
+      socket =
+        socket
+        |> assign(:email, email)
+        |> assign(:fname, user.fname)
+        |> assign(:lname, user.lname)
+    {:ok, socket}
   end
 
   def handle_in("new:msg", body, socket) do
@@ -55,7 +60,6 @@ defmodule PlanIt.RoomChannel do
   #heartbeat
   def handle_in("new:user:heartbeat", body, socket) do
     IO.inspect("Heartbeat received")
-    IO.inspect(body)
     IO.inspect(socket)
 
     broadcast! socket, "new:user:heartbeat", socket.assigns
