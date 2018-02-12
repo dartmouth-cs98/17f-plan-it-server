@@ -8,8 +8,8 @@ defmodule PlanIt.RoomChannel do
   alias PlanIt.User
 
   #Let them join any room
+  #need to handle annon joins
   def join(room, message, socket) do
-
     #need to handle the case where the email is not present.
     #annon sockets
     email = Map.get(message, "email")
@@ -17,11 +17,19 @@ defmodule PlanIt.RoomChannel do
       where: u.email == ^email,
       select: u ) |> Repo.one
 
-      socket =
-        socket
-        |> assign(:email, email)
-        |> assign(:fname, user.fname)
-        |> assign(:lname, user.lname)
+      if user do
+        IO.inspect("user exists")
+        socket = socket
+          |> assign(:email, email)
+          |> assign(:fname, user.fname)
+          |> assign(:lname, user.lname)
+      else
+        socket = socket
+          |> assign(:email, email)
+          |> assign(:fname, "a")
+          |> assign(:lname, "a")
+      end
+
     {:ok, socket}
   end
 
