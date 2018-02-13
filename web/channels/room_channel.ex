@@ -36,7 +36,7 @@ defmodule PlanIt.RoomChannel do
     body = Map.get(body, "body")
     {message, ret_package} = CardUtil.create_update_helper(Map.get(body, "tripId"), Map.get(body, "cards"))
 
-    IO.inspect(body)
+    IO.inspect("New card message in")
 
     #Scrub the ret package
     ret_package = Enum.map(ret_package, fn(c) ->
@@ -62,7 +62,8 @@ defmodule PlanIt.RoomChannel do
   #heartbeat
   def handle_in("new:user:heartbeat", body, socket) do
     IO.inspect("Heartbeat received")
-    IO.inspect(socket)
+    # IO.inspect(socket.email)
+
 
     broadcast! socket, "new:user:heartbeat", socket.assigns
     {:noreply, socket}
