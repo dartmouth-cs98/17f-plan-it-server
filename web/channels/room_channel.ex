@@ -36,6 +36,8 @@ defmodule PlanIt.RoomChannel do
     body = Map.get(body, "body")
     {message, ret_package} = CardUtil.create_update_helper(Map.get(body, "tripId"), Map.get(body, "cards"))
 
+    IO.inspect(body)
+
     #Scrub the ret package
     ret_package = Enum.map(ret_package, fn(c) ->
       Map.drop(c, [:__meta__, :__struct__, :trip])
