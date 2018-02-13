@@ -220,13 +220,18 @@ Returns 400 and an error message if the upvote/downvote is not successful.
 
 /api/v1/published?order=trending
 
+/api/v1/published?order=user_recent&user_id=:user_id
+
 /api/v1/published
 ```
 
-Popular - returns a list of published trips ordered by number of upvotes.
-Publish_date - returns a list of published trips ordered by the date the trip itself was created.
-Trending - returns a list of published trips ordered by the most recent favorited trips.
-No param - returns a list of published trips in no particular order.
+Popular - returns a list of published trips ordered by number of upvotes.  
+Publish_date - returns a list of published trips ordered by the date the trip itself was created.  
+Trending - returns a list of published trips ordered by the most recent favorited trips. 
+User_recent -  returns a list of published trips in order of most recently viewed by a particular user.  
+No param - returns a list of published trips in no particular order.  
+
+Up to 20 trips are returned for each endpoint.
 
 Returns 400 and an error message if invalid parameters are used.
 
@@ -239,30 +244,21 @@ Returns 400 and an error message if invalid parameters are used.
 Returns a list of trip ids that correspond to the user's favorited trips if get is successful. The list is ordered by descending update time (will change this to visited time soon). 
 Returns an empty list if that user hasn't favorited any trips or does not exist.
 
-#### Favorite a trip (POST)
+#### Favorite OR update a favorited trip (POST)
 ```
 /api/v1/favorited
 
 payload = {
   user_id: 100,
-  trip_id: 5
+  trip_id: 5,
+  last_visited: "2017-12-13 20:01:01"
 }
 
 ```
 
-Returns "ok" if insert is successful.
-Returns 400 and an error message if not successful.
+Must pass in user id and trip id, regardless of whether you're creating or updating a favorited trip. Last_visited is the **only** field that can be updated.
 
-#### Update a favorited trip (PUT)
-```
-/api/v1/favorited?user_id=:user_id&trip_id=:trip_id
-
-payload = {
-  visited_at: "2017-12-13 20:01:01"
-}
-```
-
-Returns "ok" if update is successful.
+Returns "ok" if insert/update is successful.
 Returns 400 and an error message if not successful.
 
 #### Un-favorite a trip (DELETE)
@@ -271,6 +267,32 @@ Returns 400 and an error message if not successful.
 ```
 
 Returns "ok" if delete is successful.
+Returns 400 and an error message if not successful.
+
+## Viewed trips
+#### Get all viewed by a user (GET)
+```
+/api/v1/viewed?user_id=:id
+```
+
+Returns a list of viewed trips (user id, trip id, photo url, trip name) that correspond to the user's viewed trips if get is successful. The list is ordered by descending time last visited/seen (which is updated by you with a PUT).
+Returns an empty list if that user hasn't viewed any trips or does not exist.
+
+#### Create or update a viewed trip (POST)
+```
+/api/v1/viewed
+
+payload = {
+  user_id: 100,
+  trip_id: 5,
+  last_visited: "2017-12-13 20:01:01"
+}
+
+```
+
+Must pass in user id and trip id, regardless of whether you're creating or updating a viewed trip. Last_visited is the **only** field that can be updated.
+
+Returns "ok" if insert is successful.
 Returns 400 and an error message if not successful.
 
 ## Cards
