@@ -117,7 +117,7 @@ defmodule PlanIt.SuggestionsController do
 
     business = %{
       name: s["name"],
-      image_url: s["image_url"],
+      photo_url: s["image_url"],
       url: s["url"],
       price: s["price"],
       rating: "#{s["rating"]}" <> "/5",
@@ -128,7 +128,8 @@ defmodule PlanIt.SuggestionsController do
       state: s["location"]["state"],
       country: s["location"]["country"],
       zip_code: s["location"]["zip_code"],
-      phone: take_countrycode(s["phone"], "+1"),
+      phone: take_countrycode(s["phone"]),
+      type: Map.get(s, "categories") |> Enum.at(0) |> Map.get("title"),
       description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("title"),
       source: "Yelp"
     }
@@ -146,12 +147,12 @@ defmodule PlanIt.SuggestionsController do
       prefix = Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0) |> Map.get("items") |> Enum.at(0) |> Map.get("prefix")
       suffix = Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0) |> Map.get("items") |> Enum.at(0) |> Map.get("suffix")
       photo_size = "original"
-      image_url = prefix <> photo_size <> suffix
+      photo_url = prefix <> photo_size <> suffix
     end
 
     business = %{
       name: s["name"],
-      image_url: image_url,
+      photo_url: image_url,
       url: "www.foursquare.com/v/" <> s["id"],
       price: s["price"]["currency"],
       rating: "#{s["rating"]}" <> "/10",
@@ -162,17 +163,19 @@ defmodule PlanIt.SuggestionsController do
       state: s["location"]["state"],
       country: s["location"]["country"],
       zip_code: s["location"]["postalCode"],
-      phone: take_countrycode(s["contact"]["phone"], "+1"),
+      phone: take_countrycode(s["contact"]["phone"]),
+      type: Map.get(s, "categories") |> Enum.at(0) |> Map.get("shortName"),
       description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("shortName"),
       source: "Foursquare"
     }
 
   end
 
-  def take_countrycode(phone_number, country_code) do
+  def take_countrycode(phone_number) do
 
     if phone_number != "" and phone_number != nil and String.length(phone_number) >= 10 do
-      String.slice(phone_number, String.length(phone_number)-10.. -1)
+      String.slice(phone_number, String.length(phone_number)-10..-1)
+
     else
       phone_number
     end

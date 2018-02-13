@@ -6,22 +6,29 @@ defmodule PlanIt.Card do
   schema "card" do
     belongs_to :trip, PlanIt.Trip
 
-    field :type, :string
     field :name, :string
-    field :city, :string
-    field :country, :string
     field :address, :string
+    field :city, :string
+    field :state, :string
+    field :country, :string
+    field :zip_code, :integer
     field :lat, :float
     field :long, :float
     field :start_time, :utc_datetime
     field :end_time, :utc_datetime
     field :day_number, :integer
 
+    field :type, :string
     field :description, :string
     field :photo_url, :string
     field :url, :string
-    field :place_id, :string
+    field :price, :string
+    field :rating, :string
+    field :phone, :string
+    field :source, :string
 
+
+    field :place_id, :string
     field :travel_type, :string
     field :travel_duration, :integer
 
@@ -30,7 +37,8 @@ defmodule PlanIt.Card do
 
   def changeset(card, params) do
     card
-    |> cast(params, [:type, :name, :city, :country, :address, :lat, :long, :start_time, :end_time, :day_number, :description, :photo_url, :url, :place_id, :travel_type, :travel_duration])
+    |> cast(params, [:name, :address, :city, :state, :country, :zip_code, :lat, :long, :start_time, :end_time, :day_number,
+      :type, :description, :photo_url, :url, :price, :rating, :phone, :source, :place_id, :travel_type, :travel_duration])
     |> cast(params, [:trip_id])
     |> validate_required([:name])
   end

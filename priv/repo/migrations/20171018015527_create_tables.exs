@@ -31,22 +31,29 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
     end
 
     create table(:card) do
-      add :type, :string
+
       add :name, :string
-      add :city, :string
-      add :country, :string
       add :address, :string
+      add :city, :string
+      add :state, :string
+      add :country, :string
+      add :zip_code, :integer
       add :lat, :float
       add :long, :float
       add :start_time, :utc_datetime
       add :end_time, :utc_datetime
       add :day_number, :integer
 
+      add :type, :string
       add :description, :string
-      add :photo_url, :text
+      add :photo_url, :string
       add :url, :string
-      add :place_id, :string
+      add :price, :string
+      add :rating, :string
+      add :phone, :string
+      add :source, :string
 
+      add :place_id, :string
       add :travel_type, :string
       add :travel_duration, :integer
 
