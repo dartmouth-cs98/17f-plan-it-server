@@ -6,6 +6,7 @@ defmodule PlanIt.RoomChannel do
   alias PlanIt.CardUtil
   alias PlanIt.Repo
   alias PlanIt.User
+  alias PlanIt.Card
 
   #Let them join any room
   #need to handle annon joins
@@ -39,10 +40,15 @@ defmodule PlanIt.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("new:msg:cards:delete", %{"body" => body}, socket) do
+  def handle_in("new:msg:cards:delete", %{"body" => item}=body, socket) do
     IO.inspect("New delete card message in")
-    IO.inspect(body)
 
+    card = Repo.get!(Card, item)
+    case Repo.delete card do
+      {:ok, struct} -> broadcast! socket, "new:msg:cards:delete", body
+    end
+
+    {:noreply, socket}
   end
 
   def handle_in("new:msg:cards", body, socket) do
