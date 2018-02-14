@@ -80,8 +80,6 @@ defmodule PlanIt.RoomChannel do
   #heartbeat
   def handle_in("new:user:heartbeat", body, socket) do
     IO.inspect("funky Heartbeat received")
-    IO.inspect(body)
-    IO.inspect(socket)
 
     broadcast! socket, "new:user:heartbeat", socket.assigns
     {:noreply, socket}
