@@ -8,17 +8,14 @@ defmodule PlanIt.RoomChannel do
   alias PlanIt.User
 
   #Let them join any room
-  #need to handle annon joins
+  # Anon users will have a uuid email. No anon sockets
   def join(room, message, socket) do
-    #need to handle the case where the email is not present.
-    #annon sockets
     email = Map.get(message, "email")
     user = (from u in User,
       where: u.email == ^email,
       select: u ) |> Repo.one
 
       if user do
-        IO.inspect("user exists")
         socket = socket
           |> assign(:email, email)
           |> assign(:fname, user.fname)
@@ -67,8 +64,8 @@ defmodule PlanIt.RoomChannel do
 
   #heartbeat
   def handle_in("new:user:heartbeat", body, socket) do
-    IO.inspect("Heartbeat received")
-    IO.inspect(socket)
+    #IO.inspect("Heartbeat received")
+    #IO.inspect(socket)
 
     broadcast! socket, "new:user:heartbeat", socket.assigns
     {:noreply, socket}
