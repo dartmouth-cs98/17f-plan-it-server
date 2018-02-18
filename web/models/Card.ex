@@ -36,6 +36,15 @@ defmodule PlanIt.Card do
   end
 
   def changeset(card, params) do
+
+    card
+    |> cast(params, [:name, :address, :city, :state, :country, :zip_code, :lat, :long, :start_time, :end_time, :day_number,
+      :type, :description, :photo_url, :url, :price, :rating, :phone, :source, :place_id, :travel_type, :travel_duration])
+    |> cast(params, [:trip_id])
+    |> validate_required([:name])
+  end
+
+  def changesetQueue(card, params) do
     card
     |> cast(params, [:name, :address, :city, :state, :country, :zip_code, :lat, :long, :start_time, :end_time, :day_number,
       :type, :description, :photo_url, :url, :price, :rating, :phone, :source, :place_id, :travel_type, :travel_duration])

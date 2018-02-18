@@ -18,7 +18,6 @@ defmodule PlanIt.CardUtil do
 
       repo_messages = Enum.map(existing_cards, fn(c) ->
         card_params = Enum.find(cards, fn(cc) -> Map.get(cc, "id") == Map.get(c, "id") end)
-
         current_card = Repo.get(Card, Map.get(c, "id"))
 
         if current_card != nil do

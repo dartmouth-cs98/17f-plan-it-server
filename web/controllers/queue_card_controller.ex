@@ -1,4 +1,4 @@
-defmodule PlanIt.CardController do
+defmodule PlanIt.QueueCardController do
   alias PlanIt.Repo
   alias PlanIt.Card
   alias PlanIt.CardUtil
@@ -15,7 +15,7 @@ defmodule PlanIt.CardController do
     end
 
     cards = (from c in Card,
-          where: c.trip_id == ^trip_id and c.day_number == ^day_num,
+          where: c.trip_id == ^trip_id and c.day_number == ^day_num and c.queue == true,
           select: c,
           order_by: [asc: :start_time]
     ) |> Repo.all
@@ -30,7 +30,7 @@ defmodule PlanIt.CardController do
     end
 
     cards = (from c in Card,
-          where: c.trip_id == ^trip_id,
+          where: c.trip_id == ^trip_id and c.queue == true,
           select: c,
           order_by: [asc: :start_time]
     ) |> Repo.all

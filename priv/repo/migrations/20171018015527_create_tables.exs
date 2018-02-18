@@ -57,6 +57,8 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       add :travel_type, :string
       add :travel_duration, :integer
 
+      add :queue, :boolean
+
       add :trip_id, references(:trip, on_delete: :delete_all)
 
       timestamps()
@@ -64,7 +66,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
 
     create table(:favorited_trip) do
       add :last_visited, :utc_datetime
-      add :trip_name, :string 
+      add :trip_name, :string
       add :photo_url, :text
       add :user_id, references(:user)
       add :trip_id, references(:trip, on_delete: :delete_all)
@@ -76,7 +78,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
 
     create table(:viewed_trip) do
       add :last_visited, :utc_datetime
-      add :trip_name, :string 
+      add :trip_name, :string
       add :photo_url, :text
       add :user_id, references(:user)
       add :trip_id, references(:trip, on_delete: :delete_all)
