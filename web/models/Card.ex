@@ -27,6 +27,7 @@ defmodule PlanIt.Card do
     field :phone, :string
     field :source, :string
 
+    field :queue, :boolean
 
     field :place_id, :string
     field :travel_type, :string

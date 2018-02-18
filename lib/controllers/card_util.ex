@@ -8,7 +8,7 @@ defmodule PlanIt.CardUtil do
   def create_update_helper(trip_id, cards) do
     new_card = Enum.find(cards, fn(c) -> Map.get(c, "id") == 0 end)
     if new_card != nil do
-      {new_card_status, new_card_changeset} = Repo.insert(Card.changeset(%Card{}, new_card))
+      {new_card_status, new_card_changeset} = Repo.insert(Card.changesetItinerary(%Card{}, new_card))
     end
 
     if new_card_status == :error do
@@ -22,7 +22,7 @@ defmodule PlanIt.CardUtil do
 
         if current_card != nil do
           current_card
-          |> Card.changeset(card_params)
+          |> Card.changesetItinerary(card_params)
           |> Repo.update()
         else
           "Card id: #{Map.get(c, "id")} was not found in database"

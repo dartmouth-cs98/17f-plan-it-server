@@ -19,7 +19,6 @@ defmodule PlanIt.RoomChannel do
       select: u ) |> Repo.one
 
       if user do
-        IO.inspect("user exists")
         socket = socket
           |> assign(:email, email)
           |> assign(:fname, user.fname)
