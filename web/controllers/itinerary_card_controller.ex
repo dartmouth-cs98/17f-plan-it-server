@@ -30,7 +30,7 @@ defmodule PlanIt.ItineraryCardController do
     end
 
     cards = (from c in Card,
-          where: c.trip_id == ^trip_id, c.queue == false,
+          where: c.trip_id == ^trip_id and c.queue == false,
           select: c,
           order_by: [asc: :start_time]
     ) |> Repo.all

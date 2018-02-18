@@ -44,48 +44,21 @@ defmodule PlanIt.QueueCardController do
     json put_status(conn, 400), error
   end
 
-  #POST update/create with a list of cards
-  ## the new card will have an ID of 0
-  def create(conn, %{"trip_id" => trip_id, "_json" => cards}) do
-    {message, package} = CardUtil.create_update_helper(trip_id, cards)
+  #POST create a single card
+  def create(conn, %{"_json" => card}) do
+    {message, changeset} = Repo.insert(Card.changesetQueue(%Card{}, card))
+
     if message == :error do
-      json put_status(conn, 400), package
+      json put_status(conn, 400), changeset
     else
-      json conn, package
+      json conn, changeset
     end
   end
-
-
-  # POST - insert new cards
-  def create(conn, %{"_json" => cards } = params) do
-    return_items = Enum.map(cards, fn(c) ->
-      {status, changeset} = Card.changeset(%Card{}, c) |> Repo.insert()
-    end)
-
-    changesets = Enum.map(return_items, fn(c) ->
-      case c do
-        {:ok, changeset} -> changeset
-        _ ->
-      end
-    end)
-    |> Enum.filter(fn(i) -> i end)
-
-    messages = Enum.map(return_items, fn(c) ->
-      case c do
-        {:error, message} -> message
-         _ -> nil
-      end
-    end)
-    |> Enum.filter(fn(i) -> i end)
-
-    json conn, changesets
-  end
-
 
   # PUT - update an existing card
   def update(conn, %{"id" => card_id} = params) do
     card = Repo.get(Card, card_id)
-    changeset = Card.changeset(card, params)
+    changeset = Card.changesetQueue(card, params)
 
     {message, changeset} = Repo.update(changeset)
 
@@ -94,7 +67,7 @@ defmodule PlanIt.QueueCardController do
       json put_status(conn, 400), error
     end
 
-    json conn, "ok"
+    json conn, changeset
   end
 
   # DELETE - delete a card
