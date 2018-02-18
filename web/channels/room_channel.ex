@@ -41,7 +41,6 @@ defmodule PlanIt.RoomChannel do
 
   def handle_in("new:msg:cards:delete", %{"body" => item}=body, socket) do
     IO.inspect("New delete card message in")
-
     card = Repo.get!(Card, item)
     case Repo.delete card do
       {:ok, struct} -> broadcast! socket, "new:msg:cards:delete", body

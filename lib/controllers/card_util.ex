@@ -43,6 +43,7 @@ defmodule PlanIt.CardUtil do
         changesets_errors
       end
 
+      #sorts the cards
       return_package = Enum.sort(return_package, fn(a, b) ->
         cond do
           is_binary(a) ->

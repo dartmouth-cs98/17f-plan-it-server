@@ -45,8 +45,8 @@ defmodule PlanIt.QueueCardController do
   end
 
   #POST create a single card
-  def create(conn, %{"_json" => card}) do
-    {message, changeset} = Repo.insert(Card.changesetQueue(%Card{}, card))
+  def create(conn, params) do
+    {message, changeset} = Repo.insert(Card.changesetQueue(%Card{}, params))
 
     if message == :error do
       json put_status(conn, 400), changeset
