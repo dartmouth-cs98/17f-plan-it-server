@@ -563,7 +563,24 @@ The categories should be a string of categories, separated by commas, with no sp
 Returns 20 businesses if get is successful.
 Returns an error message if no businesses in those categories were found near the provided coordinates. 
 
-# TESTING
+# TESTING (for v2)
+## Example curls
+
+### Create a queue card 
+Make sure to change the trip id to an existing trip
+
+curl -X POST -d '{"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":4,"travel_duration":"9000","travel_type":"bike"}' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards/queue
+
+
+### Create an itinerary card
+curl -X POST -d '[
+{"type":"hotel","name":"Hanover Inn","city":"hanover","country":"USA","address":"3 Wheelock street","lat":123123.12,"long":121231.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"},
+{"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"}]' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards/itinerary
+
+
+
+# TESTING (for v1)
+These should be modified appropriately at some point
 
 ## Example curls 
 
