@@ -142,7 +142,7 @@ defmodule PlanIt.SuggestionsController do
 
     # Check for nil in long pipe; might raise an error otherwise
     if not is_map(Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0)) do
-      image_url = nil
+      photo_url = nil
     else
       prefix = Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0) |> Map.get("items") |> Enum.at(0) |> Map.get("prefix")
       suffix = Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0) |> Map.get("items") |> Enum.at(0) |> Map.get("suffix")
@@ -152,7 +152,7 @@ defmodule PlanIt.SuggestionsController do
 
     business = %{
       name: s["name"],
-      photo_url: image_url,
+      photo_url: photo_url,
       url: "www.foursquare.com/v/" <> s["id"],
       price: s["price"]["currency"],
       rating: "#{s["rating"]}" <> "/10",
