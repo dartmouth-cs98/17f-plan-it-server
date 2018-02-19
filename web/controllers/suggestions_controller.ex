@@ -146,7 +146,7 @@ defmodule PlanIt.SuggestionsController do
     else
       prefix = Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0) |> Map.get("items") |> Enum.at(0) |> Map.get("prefix")
       suffix = Map.get(s, "photos") |> Map.get("groups") |> Enum.at(0) |> Map.get("items") |> Enum.at(0) |> Map.get("suffix")
-      photo_size = "original"
+      photo_size = "36x36"
       photo_url = prefix <> photo_size <> suffix
     end
 
