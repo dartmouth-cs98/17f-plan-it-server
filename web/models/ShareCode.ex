@@ -5,6 +5,7 @@ defmodule PlanIt.ShareCode do
   @primary_key {:id, :id, autogenerate: true}
   schema "share_code" do
     belongs_to :user, PlanIt.User
+    belongs_to :trip, PlanIt.Trip
 
     field :code, :string
     field :used, :boolean, default: false
@@ -15,8 +16,8 @@ defmodule PlanIt.ShareCode do
 
   def changeset(sharecode, params) do
     sharecode
-    |> cast(params, [:code, :used, :user_id])
+    |> cast(params, [:code, :used, :user_id, :trip_id])
     |> validate_required([:code])
-    #    |> validate_required([:code, :user_id])
+    #    |> validate_required([:code, :user_id, :trip_id])
   end
 end
