@@ -307,7 +307,7 @@ Returns 400 and an error message if not successful.
 ## Queue Cards
 #### Get cards by trip id  (GET)
 ```
-/api/v2/queue/cards?trip_id=:id
+/api/v2/cards/queue?trip_id=:id
 ```
 Returns a list of card objects if get is successful.
 Returns an empty list if that trip id isn't associated with any cards.
@@ -447,7 +447,7 @@ Returns 400 and "BAD" if the create is not successful. Nothing will be inserted 
 Takes in a list of cards to update and/or insert into the database. Only one new card can be inserted into the database, and it must have an id of 0. Must provide a **list** of cards, even if you are only trying to insert/update one card.
 
 ```
-/api/v2/cards/itinerary/?trip_id=:id
+/api/v2/cards/itinerary?trip_id=:id
 
 package = [ 
 { id: 5,
