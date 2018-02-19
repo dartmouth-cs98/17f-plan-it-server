@@ -59,7 +59,7 @@ defmodule PlanIt.ItineraryCardController do
   # POST - insert new cards
   def create(conn, %{"_json" => cards } = params) do
     return_items = Enum.map(cards, fn(c) ->
-      {status, changeset} = Card.changeset(%Card{}, c) |> Repo.insert()
+      {status, changeset} = Card.changesetItinerary(%Card{}, c) |> Repo.insert()
     end)
 
     changesets = Enum.map(return_items, fn(c) ->
@@ -85,7 +85,7 @@ defmodule PlanIt.ItineraryCardController do
   # PUT - update an existing card
   def update(conn, %{"id" => card_id} = params) do
     card = Repo.get(Card, card_id)
-    changeset = Card.changeset(card, params)
+    changeset = Card.changesetItinerary(card, params)
 
     {message, changeset} = Repo.update(changeset)
 
