@@ -47,7 +47,7 @@ The most important change is that the cards endpoint is now split into two. All 
 
 There is the addition of the `/cards/queue` endpoint. While similar to `/cards/itinerary` there are dedicated create and update endpoints instead of both being shoved into one.  
 
-Queue cards and Itinerary cards are stored in the same table but are accessed completely seperately. It is best to keep the two seperate so that we can more easily identify any buys associated with any one of the endpoints.
+Queue cards and Itinerary cards are stored in the same table but are accessed completely seperately. It is best to keep the two seperate so that we can more easily identify any bugs associated with any one of the endpoints.
 
 # Endpoints V1
 
@@ -307,21 +307,21 @@ Returns 400 and an error message if not successful.
 ## Queue Cards
 #### Get cards by trip id  (GET)
 ```
-/api/v2/queue/cards?trip_id=:id
+/api/v2/cards/queue?trip_id=:id
 ```
 Returns a list of card objects if get is successful.
 Returns an empty list if that trip id isn't associated with any cards.
 
 #### Get cards by trip id and day number (GET)
 ```
-/api/v2/queue/cards?trip_id=:trip_id&day=:day_number
+/api/v2/cards/queue?trip_id=:trip_id&day=:day_number
 ```
 Returns a list of card objects if get is successful.
 Returns an empty list if that combination of trip id and day number isn't associated with any cards.
 
 #### Create new card (POST)
 ```
-/api/v2/queue/cards
+/api/v2/cards/queue
 package = 
 { type:"hotel",
 name:"Hanover Inn",
@@ -349,7 +349,7 @@ Returns 400 and "BAD" if the create is not successful. Nothing will be inserted 
 Update single card. Returns an error if the card id does not exist.
 
 ```
-/api/v2/queue/cards/:id
+/api/v2/cards/queue/:id
 
 package =  
 { id: 5,
@@ -378,7 +378,7 @@ Returns 400 and error message if unsuccessful
 Delete single card. Returns an error if the card id does not exist.
 
 ```
-/api/v2/queue/cards/:id
+/api/v2/cards/queue/:id
 ```
 
 Returns 200 and "ok" if delete is successful.
@@ -387,14 +387,14 @@ Returns 400 and error message if unsuccessful.
 ## Itinerary Cards
 #### Get cards by trip id  (GET)
 ```
-/api/v2/itinerary/cards?trip_id=:id
+/api/v2/cards/itinerary?trip_id=:id
 ```
 Returns a list of card objects if get is successful.
 Returns an empty list if that trip id isn't associated with any cards.
 
 #### Get cards by trip id and day number (GET)
 ```
-/api/v2/itinerary/cards?trip_id=:trip_id&day=:day_number
+/api/v2/cards/itinerary?trip_id=:trip_id&day=:day_number
 ```
 Returns a list of card objects if get is successful.
 Returns an empty list if that combination of trip id and day number isn't associated with any cards.
@@ -403,7 +403,7 @@ Returns an empty list if that combination of trip id and day number isn't associ
 Must provide a **list** of cards, even if you are only trying to insert one card.
 
 ```
-/api/v2/itinerary/cards
+/api/v2/cards/itinerary
 
 package = [ 
 { type:"hotel",
@@ -447,7 +447,7 @@ Returns 400 and "BAD" if the create is not successful. Nothing will be inserted 
 Takes in a list of cards to update and/or insert into the database. Only one new card can be inserted into the database, and it must have an id of 0. Must provide a **list** of cards, even if you are only trying to insert/update one card.
 
 ```
-/api/v2/itinerary/cards?trip_id=:id
+/api/v2/cards/itinerary?trip_id=:id
 
 package = [ 
 { id: 5,
@@ -491,7 +491,7 @@ Returns a list of the updated cards sorted by start time. Returns any error mess
 Update single card. Returnes an error if the card id does not exist.
 
 ```
-/api/v2/itinerary/cards/:id
+/api/v2/cards/itinerary/:id
 
 
 package =  
@@ -522,7 +522,7 @@ Returns "BAD" if the update/insert is not successful.
 
 #### Update a single card (PUT)
 ```
-/api/v2/itinerary/cards/:id
+/api/v2/cards/itinerary/:id
 
 payload =  
 { 
@@ -537,7 +537,7 @@ Returns 400 and an error message if not successful.
 
 #### Delete a card (DELETE)
 ```
-/api/v2/itinerary/cards/:id
+/api/v2/cards/itinerary/:id
 ```
 
 Returns "ok" if delete is successful. 
