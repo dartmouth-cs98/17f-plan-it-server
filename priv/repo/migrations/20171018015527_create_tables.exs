@@ -104,8 +104,18 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       add :expires_at, :integer
 
       timestamps()
-
     end
+
+    create table(:share_code) do
+      add :code, :string
+      add :user_id, references(:user)
+      add :trip_id, references(:trip)
+      add :used, :boolean
+      add :expire_at, :integer
+
+      timestamps()
+    end
+
 
   end
 end
