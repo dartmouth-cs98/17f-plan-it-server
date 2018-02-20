@@ -6,6 +6,7 @@ defmodule PlanIt.RoomChannel do
   alias PlanIt.CardUtil
   alias PlanIt.Repo
   alias PlanIt.User
+  alias PlanIt.Card
 
   #Let them join any room
   # Anon users will have a uuid email. No anon sockets
@@ -36,8 +37,18 @@ defmodule PlanIt.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("new:msg:cards", body, socket) do
+  def handle_in("new:msg:cards:delete", %{"body" => item}=body, socket) do
+    IO.inspect("New delete card message in")
+    card = Repo.get!(Card, item)
+    case Repo.delete card do
+      {:ok, struct} -> broadcast! socket, "new:msg:cards:delete", body
+    end
 
+    {:noreply, socket}
+  end
+
+  def handle_in("new:msg:cards", body, socket) do
+    IO.inspect("New card message in")
     body = Map.get(body, "body")
     {message, ret_package} = CardUtil.create_update_helper(Map.get(body, "tripId"), Map.get(body, "cards"))
 
@@ -64,8 +75,6 @@ defmodule PlanIt.RoomChannel do
 
   #heartbeat
   def handle_in("new:user:heartbeat", body, socket) do
-    #IO.inspect("Heartbeat received")
-    #IO.inspect(socket)
 
     broadcast! socket, "new:user:heartbeat", socket.assigns
     {:noreply, socket}
@@ -73,6 +82,9 @@ defmodule PlanIt.RoomChannel do
 
   def handle_in(msg, body, socket) do
     IO.inspect("Catch all")
+    IO.inspect(msg)
+    IO.inspect(body)
+    IO.inspect(socket)
     {:noreply, socket}
    end
 

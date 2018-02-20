@@ -1,4 +1,4 @@
-defmodule PlanIt.CardController do
+defmodule PlanIt.ItineraryCardController do
   alias PlanIt.Repo
   alias PlanIt.Card
   alias PlanIt.CardUtil
@@ -15,7 +15,7 @@ defmodule PlanIt.CardController do
     end
 
     cards = (from c in Card,
-          where: c.trip_id == ^trip_id and c.day_number == ^day_num,
+          where: c.trip_id == ^trip_id and c.day_number == ^day_num and c.queue == false,
           select: c,
           order_by: [asc: :start_time]
     ) |> Repo.all
@@ -30,7 +30,7 @@ defmodule PlanIt.CardController do
     end
 
     cards = (from c in Card,
-          where: c.trip_id == ^trip_id,
+          where: c.trip_id == ^trip_id and c.queue == false,
           select: c,
           order_by: [asc: :start_time]
     ) |> Repo.all
@@ -59,7 +59,7 @@ defmodule PlanIt.CardController do
   # POST - insert new cards
   def create(conn, %{"_json" => cards } = params) do
     return_items = Enum.map(cards, fn(c) ->
-      {status, changeset} = Card.changeset(%Card{}, c) |> Repo.insert()
+      {status, changeset} = Card.changesetItinerary(%Card{}, c) |> Repo.insert()
     end)
 
     changesets = Enum.map(return_items, fn(c) ->
@@ -85,7 +85,7 @@ defmodule PlanIt.CardController do
   # PUT - update an existing card
   def update(conn, %{"id" => card_id} = params) do
     card = Repo.get(Card, card_id)
-    changeset = Card.changeset(card, params)
+    changeset = Card.changesetItinerary(card, params)
 
     {message, changeset} = Repo.update(changeset)
 

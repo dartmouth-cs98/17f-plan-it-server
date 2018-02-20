@@ -19,7 +19,7 @@ defmodule PlanIt.Router do
     get "/", PageController, :index
   end
 
-  scope "/api/v1", PlanIt do
+  scope "/api/v2", PlanIt do
     pipe_through :api
 
     resources "/users", UserController, only: [:index, :show, :create, :update]
@@ -30,16 +30,18 @@ defmodule PlanIt.Router do
       get "/downvote", TripController, :downvote
     end
 
-    resources "/cards", CardController, only: [:index, :create, :update, :delete]
+    resources "/cards/itinerary", ItineraryCardController, only: [:index, :create, :update, :delete]
+    resources "/cards/queue", QueueCardController, only: [:index, :create, :update, :delete]
 
     resources "/permissions", EditPermissionController, only: [:index, :create]
     delete "/permissions", EditPermissionController, :remove
 
     resources "/favorited", FavoritedTripController, only: [:index, :create]
-    put "/favorited", FavoritedTripController, :change
     delete "/favorited", FavoritedTripController, :remove
 
     resources "/published", PublishedTripController, only: [:index]
+
+    resources "/viewed", ViewedTripController, only: [:index, :create]
 
     get "/yelp", YelpController, :topplaces
     get "/foursquare", FoursquareController, :topplaces
