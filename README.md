@@ -38,6 +38,7 @@ There is the addition of the `/cards/queue` endpoint. While similar to `/cards/i
 
 Queue cards and Itinerary cards are stored in the same table but are accessed completely seperately. It is best to keep the two seperate so that we can more easily identify any bugs associated with any one of the endpoints.
 
+
 # Endpoints V1
 
 The base URL is https://plan-it-server.herokuapp.com/.
