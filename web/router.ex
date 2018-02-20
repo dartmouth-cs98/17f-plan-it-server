@@ -46,6 +46,9 @@ defmodule PlanIt.Router do
     get "/yelp", YelpController, :topplaces
     get "/foursquare", FoursquareController, :topplaces
     get "/suggestions", SuggestionsController, :topplaces
+
+    get "/sharecode", ShareCodeController, :index
+
   end
 
 end
