@@ -46,8 +46,8 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
 
       add :type, :string
       add :description, :string
-      add :photo_url, :string
-      add :url, :string
+      add :photo_url, :text
+      add :url, :text
       add :price, :string
       add :rating, :string
       add :phone, :string
