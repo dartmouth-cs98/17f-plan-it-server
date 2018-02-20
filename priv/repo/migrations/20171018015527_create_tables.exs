@@ -19,7 +19,9 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
     create table(:trip) do
       add :name, :string
       add :publish, :boolean
-      add :photo_url, :string
+      add :photo_url, :text
+      add :upvotes, :integer, default: 0
+      add :downvotes, :integer, default: 0
       add :start_time, :utc_datetime
       add :end_time, :utc_datetime
 
@@ -29,24 +31,33 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
     end
 
     create table(:card) do
-      add :type, :string
+
       add :name, :string
-      add :city, :string
-      add :country, :string
       add :address, :string
+      add :city, :string
+      add :state, :string
+      add :country, :string
+      add :zip_code, :integer
       add :lat, :float
       add :long, :float
       add :start_time, :utc_datetime
       add :end_time, :utc_datetime
       add :day_number, :integer
 
+      add :type, :string
       add :description, :string
-      add :photo_url, :string
-      add :url, :string
-      add :place_id, :string
+      add :photo_url, :text
+      add :url, :text
+      add :price, :string
+      add :rating, :string
+      add :phone, :string
+      add :source, :string
 
+      add :place_id, :string
       add :travel_type, :string
       add :travel_duration, :integer
+
+      add :queue, :boolean
 
       add :trip_id, references(:trip, on_delete: :delete_all)
 
@@ -55,11 +66,36 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
 
     create table(:favorited_trip) do
       add :last_visited, :utc_datetime
+      add :trip_name, :string
+      add :photo_url, :text
       add :user_id, references(:user)
       add :trip_id, references(:trip, on_delete: :delete_all)
 
       timestamps()
     end
+
+    create unique_index(:favorited_trip, [:user_id, :trip_id], name: :unique_favorited_trip)
+
+    create table(:viewed_trip) do
+      add :last_visited, :utc_datetime
+      add :trip_name, :string
+      add :photo_url, :text
+      add :user_id, references(:user)
+      add :trip_id, references(:trip, on_delete: :delete_all)
+
+      timestamps()
+    end
+
+    create unique_index(:viewed_trip, [:user_id, :trip_id], name: :unique_viewed_trip)
+
+    create table(:edit_permission) do
+      add :user_id, references(:user)
+      add :trip_id, references(:trip, on_delete: :delete_all)
+
+      timestamps()
+    end
+
+    create unique_index(:edit_permission, [:user_id, :trip_id], name: :unique_edit_permission)
 
     create table(:token) do
       add :service, :string
@@ -68,8 +104,18 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       add :expires_at, :integer
 
       timestamps()
-
     end
+
+    create table(:share_code) do
+      add :code, :string
+      add :user_id, references(:user)
+      add :trip_id, references(:trip)
+      add :used, :boolean
+      add :expire_at, :integer
+
+      timestamps()
+    end
+
 
   end
 end

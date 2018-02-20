@@ -2,4 +2,3 @@ _build
 deps
 node_modules/*
 config/prod.secret.exs
-
