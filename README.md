@@ -1,43 +1,30 @@
 # Planit Server
 
-# Running the server
+# Installation
 
-### Install elixir
-```
-brew install elixir
-```
+Install Heroku CLI at https://devcenter.heroku.com/articles/heroku-cli. 
 
-### Install hex
-```
-mix local.hex
-```
+Install PostgreSQL at https://www.postgresql.org/download/. 
 
-### Install phoenix
+# Database
+
+
+Enter the database: 
+
 ```
-mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez
+heroku pg:psql
 ```
 
-### Install Dependencies
+Show tables: 
+
 ```
-mix deps.get
+\dt
 ```
 
-### Make sure that mysql.server is running
-```
-mysql.server start
-```
+Query: 
 
-Note: if you set a password for your mysql server, then you must configure your database to by setting the "password" field in config/dev.exs.
-
-### Setup database and dependencies
 ```
-make drop
-make setup
-```
-
-### Run server
-```
-make start
+select * from "user";
 ```
 
 # V2 Changes (IMPORTANT)
@@ -49,7 +36,12 @@ There is the addition of the `/cards/queue` endpoint. While similar to `/cards/i
 
 Queue cards and Itinerary cards are stored in the same table but are accessed completely seperately. It is best to keep the two seperate so that we can more easily identify any bugs associated with any one of the endpoints.
 
+Note: make sure you put the quotations around "user" in your queries when referring to users that are created by PlanIt. Otherwise, it will display the PostgreSQL database users. 
+
+
 # Endpoints V1
+
+The base URL is https://plan-it-server.herokuapp.com/.
 
 General information:
 

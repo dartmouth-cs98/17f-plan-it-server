@@ -48,18 +48,9 @@ config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
 config :plan_it, PlanIt.Repo,
-  adapter: Ecto.Adapters.MySQL,
+  adapter: Ecto.Adapters.Postgres,
   username: "root",
   password: "",
   database: "plan_it_dev",
   hostname: "localhost",
   pool_size: 10
-
-#yelp api
-# config :yelp,
-# id: "CYQN92eKQPcAzMpfGvDknA",
-# secret: "sJ3mr4cd3TGZmJ9x1icWJdxpgPqELci5pRDDeYHJME9S4SBiKy16XtB2hJo7iXvu"
-
-# put OAuth2 debug mode
-config :oauth2,
-  debug: true
