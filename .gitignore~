@@ -1,8 +1,0 @@
-_build
-deps
-node_modules/*
-config/prod.secret.exs
-<<<<<<< HEAD
-*.DS_Store
-=======
->>>>>>> 66c9575c9021a5d041123ee569165b937c106f75
