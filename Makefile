@@ -15,3 +15,9 @@ migrate:
 
 start:
 	mix phx.server
+
+routes:
+	mix phx.routes
+
+sample:
+	curl http://localhost:4000/api/v1/createsample

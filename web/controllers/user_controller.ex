@@ -4,6 +4,7 @@ defmodule PlanIt.UserController do
   alias PlanIt.Card
   alias PlanIt.Trip
   alias PlanIt.FavoritedTrip
+  alias PlanIt.EditPermission
 
   use PlanIt.Web, :controller
 
@@ -89,12 +90,14 @@ defmodule PlanIt.UserController do
       user_id: 1,
       start_time: DateTime.from_naive!(~N[2018-05-24 00:00:00], "Etc/UTC"),
       end_time: DateTime.from_naive!(~N[2018-05-26 00:00:00], "Etc/UTC"),
+      upvotes: 5
     })
     Repo.insert!(%Trip{
       name: "Turlock Trip",
       publish: true,
       photo_url: "https://blogjob.com/lifeandliving/files/2014/08/Turlock-california.jpg",
-      user_id: 1
+      user_id: 1,
+      upvotes: 10
     })
     Repo.insert!(%Trip{
       name: "Seoul Eating Adventure",
@@ -156,10 +159,16 @@ defmodule PlanIt.UserController do
       travel_duration: 900
     })
 
-    Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 3, last_visited: Ecto.DateTime.utc})
-    Repo.insert!(%FavoritedTrip{user_id: 2, trip_id: 1, last_visited: Ecto.DateTime.utc})
-    Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 2, last_visited: Ecto.DateTime.utc})
+    # Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 3, last_visited: Ecto.DateTime.utc, trip_name: "Fave trip 1"})
+    # Repo.insert!(%FavoritedTrip{user_id: 2, trip_id: 1, last_visited: Ecto.DateTime.utc, trip_name: "Fave trip 2"})
+    # Repo.insert!(%FavoritedTrip{user_id: 1, trip_id: 2, last_visited: Ecto.DateTime.utc, trip_name: "Fave trip 3"})
+
+    Repo.insert!(%EditPermission{user_id: 1, trip_id: 1})
+    Repo.insert!(%EditPermission{user_id: 1, trip_id: 2})
+    Repo.insert!(%EditPermission{user_id: 2, trip_id: 3})
+
 
     json conn, []
   end
+
 end

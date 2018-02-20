@@ -2,7 +2,7 @@ defmodule PlanIt.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", PlanIt.RoomChannel
+  channel "rooms:*", PlanIt.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -25,7 +25,7 @@ defmodule PlanIt.UserSocket do
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
-  #     def id(socket), do: "users_socket:#{socket.assigns.user_id}"
+  #def id(socket), do: "users_socket:#{socket.assigns.user_id}"
   #
   # Would allow you to broadcast a "disconnect" event and terminate
   # all active sockets and channels for a given user:
