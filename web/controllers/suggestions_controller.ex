@@ -11,46 +11,17 @@ defmodule PlanIt.SuggestionsController do
 
   @yelp_url "https://api.yelp.com/v3/"
   @foursquare_url "https://api.foursquare.com/v2/"
+  @yelp_api_key "KDaVXonk-dL80tzpL1QjopM7LfAsb7Lf-xFvhdz6-66hJOCozyYt2SJdua2llL_L_Cc1Jqve5xaAEI6GiIpc35Y73qcvb_xqys2PnXNUgL-9EVgDo-zMcKDc9nWYWnYx"
 
 
   def index(conn, _params) do
     json conn, "ok"
   end
 
-  def get_token() do
-
-    db_token = Repo.one(from t in Token,
-      where: t.service == "yelp",
-      limit: 1, 
-      select: t
-    )
-
-    if db_token  == nil do
-      id = "CYQN92eKQPcAzMpfGvDknA"
-      secret = "sJ3mr4cd3TGZmJ9x1icWJdxpgPqELci5pRDDeYHJME9S4SBiKy16XtB2hJo7iXvu"
-
-      client = YelpHelper.create_client(id, secret)
-
-      {message, token} = YelpHelper.get_token(client)
-      Repo.insert(%Token{
-        service: "yelp",
-        access_token: token.access_token,
-        token_type: token.token_type,
-        expires_at: token.expires_at
-      })
-
-      token
-    else
-      db_token
-    end
-  end
-
   def topplaces(conn, %{"latitude" => lat, "longitude" => long, "categories" => categories} = params) do
 
-    yelp_token = get_token()
-
     yelp_url = "https://api.yelp.com/v3/businesses/search?latitude=#{lat}&longitude=#{long}&categories=#{categories}"
-    yelp_headers = ["Authorization": "#{yelp_token.token_type} #{yelp_token.access_token}"]
+    yelp_headers = ["Authorization": "Bearer #{@yelp_api_key}"]
     yelp_response = HTTPoison.get!(yelp_url, yelp_headers)
     yelp_body = Poison.decode!(yelp_response.body)
     yelp_businesses = Map.get(yelp_body, "businesses")
@@ -81,9 +52,8 @@ defmodule PlanIt.SuggestionsController do
 
   def topplaces(conn, %{"latitude" => lat, "longitude" => long} = params) do
 
-    yelp_token = get_token()
     yelp_url = "https://api.yelp.com/v3/businesses/search?latitude=#{lat}&longitude=#{long}"
-    yelp_headers = ["Authorization": "#{yelp_token.token_type} #{yelp_token.access_token}"]
+    yelp_headers = ["Authorization": "Bearer #{@yelp_api_key}"]
     yelp_response = HTTPoison.get!(yelp_url, yelp_headers)
     yelp_body = Poison.decode!(yelp_response.body)
     yelp_businesses = Map.get(yelp_body, "businesses")
@@ -117,9 +87,8 @@ defmodule PlanIt.SuggestionsController do
 
   def topplaces(conn, %{"latitude" => lat, "longitude" => long, "trip_id" => trip_id} = params) do
 
-    yelp_token = get_token()
     yelp_url = "https://api.yelp.com/v3/businesses/search?latitude=#{lat}&longitude=#{long}"
-    yelp_headers = ["Authorization": "#{yelp_token.token_type} #{yelp_token.access_token}"]
+    yelp_headers = ["Authorization": "Bearer #{@yelp_api_key}"]
     yelp_response = HTTPoison.get!(yelp_url, yelp_headers)
     yelp_body = Poison.decode!(yelp_response.body)
     yelp_businesses = Map.get(yelp_body, "businesses")
