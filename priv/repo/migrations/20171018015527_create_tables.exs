@@ -55,7 +55,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
 
       add :place_id, :string
       add :travel_type, :string
-      add :travel_duration, :string
+      add :travel_duration, :integer
 
       add :queue, :boolean
 
