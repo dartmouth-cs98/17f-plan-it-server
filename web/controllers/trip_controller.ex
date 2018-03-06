@@ -6,7 +6,7 @@ defmodule PlanIt.TripController do
   import Ecto.Query
 
   use PlanIt.Web, :controller
-  
+
   # GET - get all trips created by a user
   def index(conn, %{"user_id" => user_id } = params) do
     if user_id == nil do
@@ -90,6 +90,7 @@ defmodule PlanIt.TripController do
 
   # POST - insert a new trip
   def create(conn, params) do
+    IO.inspect(params)
     {message, changeset} = Trip.insert_trip(params)
 
     if message == :error  do
