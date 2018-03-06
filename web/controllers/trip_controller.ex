@@ -91,14 +91,18 @@ defmodule PlanIt.TripController do
   # POST - insert a new trip
   def create(conn, %{"user_id" => user_id, "name" => name } = params) do
     IO.inspect(params)
-    {message, changeset} = Trip.insert_trip(params)
+    if user_id == "null" do
+      json put_status(conn, 400), "user_id is null"
+    else
+      {message, changeset} = Trip.insert_trip(params)
 
-    if message == :error  do
-      error = "error: #{inspect changeset.errors}"
-      json put_status(conn, 400), error
+      if message == :error  do
+        error = "error: #{inspect changeset.errors}"
+        json put_status(conn, 400), error
+      end
+
+      json conn, changeset.id
     end
-
-    json conn, changeset.id
   end
 
   def create(conn, _params) do
