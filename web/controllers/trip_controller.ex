@@ -90,6 +90,7 @@ defmodule PlanIt.TripController do
 
   # POST - insert a new trip
   def create(conn, %{"user_id" => user_id, "name" => name } = params) do
+    IO.inspect(params)
     {message, changeset} = Trip.insert_trip(params)
 
     if message == :error  do
