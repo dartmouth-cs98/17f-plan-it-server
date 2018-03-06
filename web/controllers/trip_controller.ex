@@ -89,8 +89,7 @@ defmodule PlanIt.TripController do
   end
 
   # POST - insert a new trip
-  def create(conn, params) do
-    IO.inspect(params)
+  def create(conn, %{"user_id" => user_id, "name" => name } = params) do
     {message, changeset} = Trip.insert_trip(params)
 
     if message == :error  do
@@ -99,6 +98,10 @@ defmodule PlanIt.TripController do
     end
 
     json conn, changeset.id
+  end
+
+  def create(conn, _params) do
+    json put_status(conn, 400), "bad request. missing either name or user_id"
   end
 
   # PUT - update an existing trip
