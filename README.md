@@ -1,33 +1,50 @@
 # Planit Server
 
-# Installation
+# Deployment 
 
-Install Heroku CLI at https://devcenter.heroku.com/articles/heroku-cli. 
+The "develop" branch is deployed on an AWS server. 
 
-Install PostgreSQL at https://www.postgresql.org/download/. 
+To deploy the server locally, follow these instructions:
 
-# Database
+# Running the server
 
-
-Enter the database: 
-
+### Install elixir
 ```
-heroku pg:psql
+brew install elixir
 ```
 
-Show tables: 
-
+### Install hex
 ```
-\dt
-```
-
-Query: 
-
-```
-select * from "user";
+mix local.hex
 ```
 
-Note: make sure you put the quotations around "user" in your queries when referring to users that are created by PlanIt. Otherwise, it will display the PostgreSQL database users. 
+### Install phoenix
+```
+mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez
+```
+
+### Install Dependencies
+```
+mix deps.get
+```
+
+### Make sure that mysql.server is running
+```
+mysql.server start
+```
+
+Note: if you set a password for your mysql server, then you must configure your database by setting the "password" field in config/dev.exs.
+
+### Setup database and dependencies
+```
+make drop
+make setup
+```
+
+### Run server
+```
+make start
+```
 
 # V2 Changes (IMPORTANT)
 Make sure to update the version number on your endpoints from `v1` to `v2`.
@@ -38,10 +55,7 @@ There is the addition of the `/cards/queue` endpoint. While similar to `/cards/i
 
 Queue cards and Itinerary cards are stored in the same table but are accessed completely seperately. It is best to keep the two seperate so that we can more easily identify any bugs associated with any one of the endpoints.
 
-
 # Endpoints V1
-
-The base URL is https://plan-it-server.herokuapp.com/.
 
 General information:
 
@@ -554,90 +568,3 @@ The categories should be a string of categories, separated by commas, with no sp
 
 Returns 20 businesses if get is successful.
 Returns an error message if no businesses in those categories were found near the provided coordinates. 
-
-# TESTING (for v2)
-## Example curls
-
-### Create a queue card 
-Make sure to change the trip id to an existing trip
-
-curl -X POST -d '{"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":4,"travel_duration":"9000","travel_type":"bike"}' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards/queue
-
-
-### Create an itinerary card
-curl -X POST -d '[
-{"type":"hotel","name":"Hanover Inn","city":"hanover","country":"USA","address":"3 Wheelock street","lat":123123.12,"long":121231.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"},
-{"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"}]' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards/itinerary
-
-
-
-# TESTING (for v1)
-These should be modified appropriately at some point
-
-## Example curls 
-
-### Create a user
-curl -X POST -d '{"fname":"david","lname":"walsh","email":"davidwalsh@example.com","username":"davidwalsh2","birthday":"2000-11-20"}' -H "Content-Type: application/json" http://localhost:4000/api/v2/users
-
-### Update a user
-curl -X PUT -d '{"fname":"john","email":"davidwalsh@example.com"}' -H "Content-Type: application/json" http://localhost:4000/api/v2/users/1
-
-### Give edit permissions to a user
-curl -X POST -d '{"user_id":4,"trip_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v2/permissions
-
-### Create a trip 
-curl -X POST -d '{"name":"updated trip name","user_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v2/trips
-
-### Create a trip with a super long photourl
-curl -X POST -d '{"name":"trip with photo","user_id":1, "photo_url": "https://lh3.googleusercontent.com/nZBaAj4jTDga_lVcsJptWhC3GuWno5QwGIAy4_Misy3EfqPVLsa2Wul4_mz39V7mNNmsJMWv6yiDN0KZDE2N0mFnNqvxUWvVCet7J95BTbddnP7rB6tWcm_FtFxDWjNzdy1painImGuqgGLV82yMlCZMdieWSomkBYj6FeG-s3VkZIwjvoMd1GIRxRYhZE0NvADKMEpkwvGqBzgBxARvuVheiMsSbiZwyCLlNEzc0_Cz-78siJDVJkYyHOdjtV4RFKju_25niPqUbr9IMRYBv-CrAvWN5pb9QfRVLeIjmLIEJM4mz_xHUjKBh_HoG_qblQfEL16cpvghOOyaJJvnpACEfDHDLpiMyxdrZ3X0wJU2KHAQuXFFaqnikdVDDSuWy57jpy38fVfZaddhmEK1Q40xAPJ52gwx24UkCdZL9OW0EVvhYyFERExxAIm_d76Cf58clYr5766u1YdQThxcOlDZpCsdEErE8oKkgTZEUKUp297eXS3FEjp0IfJjWeZTFKPeG0UAZLQfxYrjFMeIdmw=w1470-h834-no"}' -H "Content-Type: application/json" http://localhost:4000/api/v2/trips
-
-### Copy an existing trip
-curl -X POST -d '{"user_id":1}' -H "Content-Type: application/json" http://localhost:4000/api/v2/trips?original_id=1
-
-### Update a trip
-curl -X PUT -d '{"name":"updated trip name"}' -H "Content-Type: application/json" http://localhost:4000/api/v2/trips/1
-
-### Favorite a trip
-curl -X POST -d '{"user_id":1,"trip_id":3}' -H "Content-Type: application/json" http://localhost:4000/api/v2/favorited
-
-### Create cards
-curl -X POST -d '[
-{"type":"hotel","name":"Hanover Inn","city":"hanover","country":"USA","address":"3 Wheelock street","lat":123123.12,"long":121231.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"},
-{"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":1,"travel_duration":"10:10:10","travel_type":"bike"}]' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards
-
-### Update single card
-curl -X PUT -d '
-{"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":1,"travel_duration":"10","travel_type":"bus"}' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards/2
-
-### Update multiple cards
-curl -X POST -d '[
-{"id":0,"type":"new act","name":"boloco","city":"hanover","country":"USA","address":"lebanon street 2","lat":121.12,"long":12123.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10","travel_type":"bike"},
-{"id":5,"type":"hotel","name":"Hanover Inn","city":"hanover","country":"USA","address":"3 Wheelock street","lat":123123.12,"long":121231.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10","travel_type":"uber"},
-{"id":6,"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:01:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":1,"travel_duration":"10","travel_type":"bus"}]' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards?trip_id=1
-
-### Update multiple cards to reorder them (drag and drop test). Use right after creating sample
-#### List returned should be bolocco -> Hanover Inn -> Baker Berry
-curl -X POST -d '[
-{"id":0,"type":"new act","name":"boloco","city":"hanover","country":"USA","address":"lebanon street 2","lat":121.12,"long":12123.12312,"start_time":"2017-12-12 20:01:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10","travel_type":"bike"},
-{"id":2,"type":"hotel","name":"Hanover Inn","city":"hanover","country":"USA","address":"3 Wheelock street","lat":123123.12,"long":121231.12312,"start_time":"2017-12-12 20:11:01","end_time":"2017-12-13 20:01:01","day_number":1,"trip_id":1,"travel_duration":"10","travel_type":"uber"},
-{"id":3,"type":"attraction","name":"Baker Berry","city":"hanover","country":"USA","address":"1 Tuck street","lat":1231.12,"long":123.12,"start_time":"2017-12-14 20:10:01","end_time":"2017-12-15 20:01:01","day_number":2,"trip_id":1,"travel_duration":"10","travel_type":"bus"}]' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards?trip_id=1
-
-### Update a card
-curl -X PUT -d '{"lat":1123.123}' -H "Content-Type: application/json" http://localhost:4000/api/v2/cards/1
-
-### Get businesses near Hanover with Yelp API
-curl -X GET http://localhost:4000/api/v2/yelp?latitude=43.7022&longitude=-72.2896
-
-### Get chocolate- and donut-related businesses near Hanover with Yelp API
-curl -X GET http://localhost:4000/api/v2/yelp?latitude=43.7022&longitude=-72.2896&categories=chocolate,donuts
-
-### Get business near Hanover with Foursquare API
-curl -X GET http://localhost:4000/api/v2/foursquare?latitude=43.7022&longitude=-72.2896
-or
-curl -X GET http://localhost:4000/api/v2/foursquare?near=Hanover,NH
-
-### Get chocolate- and donut-related businesses near Hanover with Foursquare API
-curl -X GET http://localhost:4000/api/v2/foursquare?latitude=43.7022&longitude=-72.2896&categories=chocolate,donuts
-or
-curl -X GET http://localhost:4000/api/v2/foursquare?near=Hanover,NH&categories=chocolate,donuts
-
