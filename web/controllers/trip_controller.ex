@@ -6,7 +6,7 @@ defmodule PlanIt.TripController do
   import Ecto.Query
 
   use PlanIt.Web, :controller
-  
+
   # GET - get all trips created by a user
   def index(conn, %{"user_id" => user_id } = params) do
     if user_id == nil do
@@ -89,15 +89,24 @@ defmodule PlanIt.TripController do
   end
 
   # POST - insert a new trip
-  def create(conn, params) do
-    {message, changeset} = Trip.insert_trip(params)
+  def create(conn, %{"user_id" => user_id, "name" => name } = params) do
+    IO.inspect(params)
+    if user_id == "null" do
+      json put_status(conn, 400), "user_id is null"
+    else
+      {message, changeset} = Trip.insert_trip(params)
 
-    if message == :error  do
-      error = "error: #{inspect changeset.errors}"
-      json put_status(conn, 400), error
+      if message == :error  do
+        error = "error: #{inspect changeset.errors}"
+        json put_status(conn, 400), error
+      end
+
+      json conn, changeset.id
     end
+  end
 
-    json conn, changeset.id
+  def create(conn, _params) do
+    json put_status(conn, 400), "bad request. missing either name or user_id"
   end
 
   # PUT - update an existing trip
