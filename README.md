@@ -1,5 +1,11 @@
 # Planit Server
 
+# Deployment 
+
+This branch is deployed on an AWS server.
+
+To deploy this branch locally, follow these instructions:
+
 # Running the server
 
 ### Install elixir
