@@ -11,7 +11,7 @@ defmodule PlanIt.Card do
     field :city, :string
     field :state, :string
     field :country, :string
-    field :zip_code, :integer
+    field :zip_code, :string
     field :lat, :float
     field :long, :float
     field :start_time, :utc_datetime

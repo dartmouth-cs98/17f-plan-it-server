@@ -37,7 +37,7 @@ defmodule PlanIt.Repo.Migrations.CreateTables do
       add :city, :string
       add :state, :string
       add :country, :string
-      add :zip_code, :integer
+      add :zip_code, :string
       add :lat, :float
       add :long, :float
       add :start_time, :utc_datetime
