@@ -130,6 +130,11 @@ defmodule PlanIt.SuggestionsController do
 
   def formatYelp(s) do
 
+    IO.inspect("as is")
+    IO.inspect(s["location"]["zip_code"])
+    IO.inspect("string")
+    IO.inspect(to_string(s["location"]["zip_code"]))
+
     business = %{
       name: s["name"],
       photo_url: s["image_url"],
@@ -140,9 +145,9 @@ defmodule PlanIt.SuggestionsController do
       long: s["coordinates"]["longitude"],
       address: s["location"]["address1"],
       city: s["location"]["city"],
-      state: s["location"]["state"],
+      state: to_string(s["location"]["state"]),
       country: s["location"]["country"],
-      zip_code: s["location"]["zip_code"],
+      zip_code: to_string(s["location"]["zip_code"]),
       phone: take_countrycode(s["phone"]),
       type: Map.get(s, "categories") |> Enum.at(0) |> Map.get("title"),
       description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("title"),
@@ -165,6 +170,11 @@ defmodule PlanIt.SuggestionsController do
       photo_url = prefix <> photo_size <> suffix
     end
 
+    IO.inspect("as is")
+    IO.inspect(s["location"]["postalCode"])
+    IO.inspect("string")
+    IO.inspect(to_string(s["location"]["postalCode"]))
+
     business = %{
       name: s["name"],
       photo_url: photo_url,
@@ -175,9 +185,9 @@ defmodule PlanIt.SuggestionsController do
       long: s["location"]["lng"],
       address: s["location"]["address"],
       city: s["location"]["city"],
-      state: s["location"]["state"],
+      state: to_string(s["location"]["state"]),
       country: s["location"]["country"],
-      zip_code: s["location"]["postalCode"],
+      zip_code: to_string(s["location"]["postalCode"]),
       phone: take_countrycode(s["contact"]["phone"]),
       type: Map.get(s, "categories") |> Enum.at(0) |> Map.get("shortName"),
       description: Map.get(s, "categories") |> Enum.at(0) |> Map.get("shortName"),
